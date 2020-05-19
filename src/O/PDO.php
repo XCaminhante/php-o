@@ -469,10 +469,11 @@ class PDOStatement extends \PDOStatement {
 
   /**
    * @param int $mode
+   * @param array $params
    * @return bool|PDOStatement
    */
-  public function setFetchMode($mode) {
-    $result = parent::setFetchMode($mode);
+  public function setFetchMode($mode,$params = NULL) {
+    $result = parent::setFetchMode($mode,$params);
     return $this->pdo->isFluent() ? $this : $result;
   }
 
