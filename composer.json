@@ -1,21 +1,17 @@
 {
-    "name": "jsebrech/o",
-    "description": "O-syntax for PHP",
-    "homepage": "https://github.com/jsebrech/php-o",
-    "license": "Apache-2.0",
-    "authors": [
-        {
-            "name": "Joeri Sebrechts",
-            "email": "joeri@sebrechts.net"
-        }
-    ],
-    "autoload": {
-        "psr-0": {
-            "O": "src/"
-        }
-    },
-    "require": {
-        "php": ">=5.3.6",
-        "ext-mbstring": "*"
-    }
+  "name": "xcaminhante/o",
+  "description": "O-syntax for PHP",
+  "homepage": "https://github.com/XCaminhante/php-o",
+  "license": "Apache-2.0",
+  "authors": [
+    { "name": "Joeri Sebrechts", "email": "joeri@sebrechts.net" },
+    { "name": "X Caminhante", "email": "xcaminhante@i2pmail.org" }
+  ],
+  "autoload": {
+    "psr-0": { "O": "src/" }
+  },
+  "require": {
+    "php": ">=5.3.6",
+    "ext-mbstring": "*"
+  }
 }
