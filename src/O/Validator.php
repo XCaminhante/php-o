@@ -1,22 +1,28 @@
 <?php
-
+//@+leo-ver=5-thin
+//@+node:caminhante.20211024200632.1: * @file Validator.php
+//@@first
 namespace O;
-
+//@@language php
+//@+others
+//@+node:caminhante.20211024202712.1: ** /includes
 if (!class_exists("\\O\\StringClass")) include("StringClass.php");
 if (!class_exists("\\O\\ObjectClass")) include("ObjectClass.php");
 if (!class_exists("\\O\\ReflectionClass")) include("ReflectionClass.php");
-
+//@+node:caminhante.20211024202724.1: ** class Validator
 /**
  * PHP implementation of JSR-303 (object validation via annotation)
  * Usage: O\Validator::validate($obj)
  */
-class Validator
-{
+class Validator {
+  private static $constraints = array();
+  //@+others
+  //@+node:caminhante.20211024203350.1: *3* static function getAnnotations
   /**
    * @var string $doc comment of a parameter or property
    * @return array
    */
-  static function getAnnotations($doc) {
+  static function getAnnotations ($doc) {
     $matches = array();
     s($doc)->preg_match_all("/\@([\\w]+)(?:\(([^)]+)\))?/", $matches, PREG_SET_ORDER);
     $annotations = array();
@@ -32,24 +38,18 @@ class Validator
             // example: @Size(min=10, max=30)
             $variables = array();
             $pairs = s($match[2])->explode(",");
-            foreach ($pairs as $pair)
-            {
+            foreach ($pairs as $pair) {
               $parts = s($pair)->explode("=");
-              if (count($parts) == 2)
-              {
-                $variables[trim($parts[0])] = trim($parts[1]);
-              };
-            };
-            if (count($variables) > 0) {
-              $annotations[$match[1]] = $variables;
-            };
-          };
-        };
-      };
-    };
+              if (count($parts) == 2) { $variables[trim($parts[0])] = trim($parts[1]); }
+            }
+            if (count($variables) > 0) { $annotations[$match[1]] = $variables; }
+          }
+        }
+      }
+    }
     return $annotations;
   }
-
+  //@+node:caminhante.20211024203531.1: *3* static function validateValue
   /**
    * Validate a property value according to the rules on its comment
    *
@@ -65,17 +65,16 @@ class Validator
    * @param mixed $value
    * @return \O\ConstraintViolation[]
    */
-  static function validateValue($class, $property, $value) {
+  static function validateValue ($class, $property, $value) {
     $result = array();
     if (is_string($property)) {
       $class = new ReflectionClass($class);
       $property = $class->getProperty($property);
-    };
+    }
     $converted = convertType($value, $property->getType());
     if ((gettype($converted) != gettype($value)) || ($converted != $value)) {
-      $result[] = new ConstraintViolation(
-        "Property type mismatch", "type", NULL, $property->getName(), $value);
-    };
+      $result[] = new ConstraintViolation("Property type mismatch", "type", NULL, $property->getName(), $value);
+    }
     $constraints = self::getAnnotations($property->getDocComment(TRUE));
     foreach ($constraints as $constraint => $param) {
       if ($constraint == "Valid") {
@@ -83,66 +82,61 @@ class Validator
         if (is_object($value)) {
           $violations = self::validate($value);
           foreach ($violations as $violation) {
-            $violation->propertyPath =
-              $property->getName().".".$violation->propertyPath;
+            $violation->propertyPath = $property->getName() . "." . $violation->propertyPath;
             $result[] = $violation;
-          };
+          }
         } else if (is_array($value)) {
           foreach ($value as $i => $item) {
             if (is_object($item)) {
               $violations = self::validate($item);
               foreach ($violations as $violation) {
-                $violation->propertyPath =
-                  $property->getName()."[$i].".$violation->propertyPath;
+                $violation->propertyPath = $property->getName() . "[$i]." . $violation->propertyPath;
                 $result[] = $violation;
-              };
-            };
-          };
-        };
+              }
+            }
+          }
+        }
       } else {
         $fn = self::$constraints[$constraint];
         if (function_exists($fn)) {
           if (!call_user_func($fn, $value, $param)) {
             $msg = $constraint." constraint violated";
-            if (function_exists($fn."_Message")) {
-              $msg = call_user_func($fn."_Message", $param);
-            };
-            $result[] = new ConstraintViolation(
-              $msg, $constraint, NULL, $property->getName(), $value);
-          };
-        };
-      };
-    };
+            if (function_exists($fn."_Message")) { $msg = call_user_func($fn."_Message", $param); }
+            $result[] = new ConstraintViolation($msg, $constraint, NULL, $property->getName(), $value);
+          }
+        }
+      }
+    }
     return $result;
   }
-
+  //@+node:caminhante.20211024204135.1: *3* static function validateProperty
   /**
    * @var mixed $object
    * @var string|\O\ReflectionProperty $property
    * @return \O\ConstraintViolation[]
    */
-  static function validateProperty($object, $property) {
+  static function validateProperty ($object, $property) {
     $result = array();
     if (is_string($property)) {
       $class = new ReflectionClass($object);
       $property = $class->getProperty($property);
-    };
+    }
     if (is_a($property, "ReflectionProperty") && $property->isPublic()) {
       $propertyName = $property->getName();
       $value = $object->$propertyName;
       $result = self::validateValue($property->getDeclaringClass(), $property, $value);
       foreach ($result as &$violation) {
         $violation->rootObject = $object;
-      };
-    };
+      }
+    }
     return $result;
   }
-
+  //@+node:caminhante.20211024204152.1: *3* static function validate
   /**
    * @var mixed $object
    * @return \O\ConstraintViolation[]
    */
-  static function validate($object) {
+  static function validate ($object) {
     $result = array();
     $class = new ReflectionClass($object);
     foreach ($class->getProperties() as $property) {
@@ -151,14 +145,13 @@ class Validator
     };
     return $result;
   }
-
-  private static $constraints = array();
-  static function addConstraint($name, $constraintFn) {
+  //@+node:caminhante.20211024204210.1: *3* static function addConstraint
+  static function addConstraint ($name, $constraintFn) {
     self::$constraints[$name] = $constraintFn;
   }
-
+  //@-others
 }
-
+//@+node:caminhante.20211024202737.1: ** class ConstraintViolation
 class ConstraintViolation {
   /**
    * A human-readable description of the message
@@ -182,10 +175,7 @@ class ConstraintViolation {
    * The value on which validation failed
    */
   public $invalidValue = NULL;
-
-  public function __construct(
-    $message, $constraint, $rootObject, $propertyPath, $invalidValue)
-  {
+  public function __construct ($message, $constraint, $rootObject, $propertyPath, $invalidValue) {
     $this->message = $message;
     $this->constraint = $constraint;
     $this->rootObject = $rootObject;
@@ -193,21 +183,18 @@ class ConstraintViolation {
     $this->invalidValue = $invalidValue;
   }
 }
-
-// constraints
-
-// @Null
-function validate_Null($value) { return $value === NULL; }
-Validator::addConstraint("Null", "O\\validate_Null");
-function validate_Null_Message() { return "Must be null"; }
-
-// @NotNull
-function validate_NotNull($value) { return $value !== NULL; }
-Validator::addConstraint("NotNull", "O\\validate_NotNull");
-function validate_NotNull_Message() { return "Cannot be null"; }
-
-// @NotEmpty
-function validate_NotEmpty($value) {
+//@+node:caminhante.20211024202751.1: ** /constraints
+// TODO: remaining validator: @Pattern(regex=value,flag=value)
+//@+node:caminhante.20211024202757.1: *3* @Null
+function validate_Null ($value) { return $value === NULL; }
+Validator::addConstraint ("Null", "O\\validate_Null");
+function validate_Null_Message () { return "Must be null"; }
+//@+node:caminhante.20211024202814.1: *3* @NotNull
+function validate_NotNull ($value) { return $value !== NULL; }
+Validator::addConstraint ("NotNull", "O\\validate_NotNull");
+function validate_NotNull_Message () { return "Cannot be null"; }
+//@+node:caminhante.20211024202833.1: *3* @NotEmpty
+function validate_NotEmpty ($value) {
   if ($value === NULL) return FALSE;
   if (is_array($value)) {
     return count($value) > 0;
@@ -216,20 +203,17 @@ function validate_NotEmpty($value) {
   }
 }
 Validator::addConstraint("NotEmpty", "O\\validate_NotEmpty");
-function validate_NotEmpty_Message() { return "Cannot be empty"; }
-
-// @AssertTrue
-function validate_AssertTrue($value) { return $value == TRUE; }
+function validate_NotEmpty_Message () { return "Cannot be empty"; }
+//@+node:caminhante.20211024202854.1: *3* @AssertTrue
+function validate_AssertTrue ($value) { return $value == TRUE; }
 Validator::addConstraint("AssertTrue", "O\\validate_AssertTrue");
-function validate_AssertTrue_Message() { return "Must be true"; }
-
-// @AssertFalse
-function validate_AssertFalse($value) { return $value == FALSE; }
+function validate_AssertTrue_Message () { return "Must be true"; }
+//@+node:caminhante.20211024202858.1: *3* @AssertFalse
+function validate_AssertFalse ($value) { return $value == FALSE; }
 Validator::addConstraint("AssertFalse", "O\\validate_AssertFalse");
-function valudate_AssertFalse_Message() { return "Must be false"; }
-
-// @Min(value)
-function validate_Min($value, $param) {
+function valudate_AssertFalse_Message () { return "Must be false"; }
+//@+node:caminhante.20211024202902.1: *3* @Min(value)
+function validate_Min ($value, $param) {
   if (is_array($value)) {
     foreach ($value as $item) {
       if ($item < $param) return FALSE;
@@ -240,10 +224,9 @@ function validate_Min($value, $param) {
   }
 }
 Validator::addConstraint("Min", "O\\validate_Min");
-function validate_Min_Message($param) { return "Must be >= ".$param; }
-
-// @Max(value)
-function validate_Max($value, $param) {
+function validate_Min_Message ($param) { return "Must be >= ".$param; }
+//@+node:caminhante.20211024202906.1: *3* @Max(value)
+function validate_Max ($value, $param) {
   if (is_array($value)) {
     foreach ($value as $item) {
       if ($item > $param) return FALSE;
@@ -254,10 +237,9 @@ function validate_Max($value, $param) {
   }
 }
 Validator::addConstraint("Max", "O\\validate_Max");
-function validate_Max_Message($param) { return "Must be <= ".$param; }
-
-// @Size(min=value,max=value)
-function validate_Size($value, $variables) {
+function validate_Max_Message ($param) { return "Must be <= ".$param; }
+//@+node:caminhante.20211024202916.1: *3* @Size(min=value,max=value)
+function validate_Size ($value, $variables) {
   $min = isset($variables["min"]) ? $variables["min"] : NULL;
   $max = isset($variables["max"]) ? $variables["max"] : NULL;
   $length = NULL;
@@ -270,13 +252,13 @@ function validate_Size($value, $variables) {
       (($max === NULL) || ($length <= $max)) );
 }
 Validator::addConstraint("Size", "O\\validate_Size");
-function validate_Size_Message($param) {
+function validate_Size_Message ($param) {
   $min = isset($param["min"]) ? $param["min"] : "?";
   $max = isset($param["max"]) ? $param["max"] : "?";
   return "Size must be between $min and $max";
 }
-// @DecimalMin(value)
-function validate_DecimalMin($value, $param) {
+//@+node:caminhante.20211024202920.1: *3* @DecimalMin(value)
+function validate_DecimalMin ($value, $param) {
   if ($value === null) return TRUE;
   if (is_array($value)) {
     foreach ($value as $item) {
@@ -296,9 +278,9 @@ function validate_DecimalMin($value, $param) {
   }
 }
 Validator::addConstraint("DecimalMin", "O\\validate_DecimalMin");
-function validate_DecimalMin_Message($param) { return "Must be >= ".$param; }
-// @DecimalMax(value)
-function validate_DecimalMax($value, $param) {
+function validate_DecimalMin_Message ($param) { return "Must be >= ".$param; }
+//@+node:caminhante.20211024202924.1: *3* @DecimalMax(value)
+function validate_DecimalMax ($value, $param) {
   if ($value === null) return TRUE;
   if (is_array($value)) {
     foreach ($value as $item) {
@@ -318,9 +300,9 @@ function validate_DecimalMax($value, $param) {
   }
 }
 Validator::addConstraint("DecimalMax", "O\\validate_DecimalMax");
-function validate_DecimalMax_Message($param) { return "Must be <= ".$param; }
-// @Digits(integer=value,fraction=value)
-function validate_Digits($value, $variables) {
+function validate_DecimalMax_Message ($param) { return "Must be <= ".$param; }
+//@+node:caminhante.20211024202929.1: *3* @Digits(integer=value,fraction=value)
+function validate_Digits ($value, $variables) {
   if (is_array($value)) {
     foreach ($value as $item) {
       if (!validate_Digits($item, $variables)) return FALSE;
@@ -337,13 +319,13 @@ function validate_Digits($value, $variables) {
   }
 }
 Validator::addConstraint("Digits", "O\\validate_Digits");
-function validate_Digits_Message($param) {
+function validate_Digits_Message ($param) {
   $decimals = isset($param["decimals"]) ? intval($param["decimals"]) : 0;
   $fraction = isset($param["fraction"]) ? intval($param["fraction"]) : 0;
   return "Number must have $decimals decimals and $fraction fractional digits";
 }
-// @Past
-function validate_Past($value) {
+//@+node:caminhante.20211024202933.1: *3* @Past
+function validate_Past ($value) {
   if ($value === null) return TRUE;
   if (is_array($value)) {
     foreach ($value as $item) {
@@ -363,9 +345,9 @@ function validate_Past($value) {
   }
 }
 Validator::addConstraint("Past", "O\\validate_Past");
-function validate_Past_Message() { return "Must be in the past"; };
-// @Future
-function validate_Future($value) {
+function validate_Past_Message () { return "Must be in the past"; };
+//@+node:caminhante.20211024202937.1: *3* @Future
+function validate_Future ($value) {
   if ($value === null) return TRUE;
   if (is_array($value)) {
     foreach ($value as $item) {
@@ -385,6 +367,6 @@ function validate_Future($value) {
   }
 }
 Validator::addConstraint("Future", "O\\validate_Future");
-function validate_Future_Message() { return "Must be in the future"; };
-// TODO: remaining validator: @Pattern(regex=value,flag=value)
-
+function validate_Future_Message () { return "Must be in the future"; };
+//@-others
+//@-leo

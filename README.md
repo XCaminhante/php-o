@@ -68,7 +68,7 @@ Implemented methods are: `->count()`, `->has()` (instead of `in_array()`), `->se
 
       // adapted from
       // http://cambiatablog.wordpress.com/2011/03/25/algorithm-for-string-similarity-better-than-levenshtein-and-similar_text/
-      function stringCompare($a, $b) {
+      function stringCompare ($a, $b) {
         $a = s($a); $b = s($b);
         $i = 0;
         $segmentCount = 0;

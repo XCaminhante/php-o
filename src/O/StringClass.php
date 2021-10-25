@@ -18,11 +18,11 @@ if (!extension_loaded("mbstring")) {
 class StringClass implements \IteratorAggregate, \ArrayAccess {
   private $s;
 
-  function __construct($s) {
+  function __construct ($s) {
     $this->s = $s;
   }
 
-  function __toString() {
+  function __toString () {
     return strval($this->s);
   }
 
@@ -34,7 +34,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $offset The position to start searching
    * @return int
    */
-  function pos($needle, $offset = 0) {
+  function pos ($needle, $offset = 0) {
     return mb_strpos($this->s, $needle, $offset);
   }
 
@@ -44,7 +44,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $offset The position to start searching
    * @return int
    */
-  function ipos($needle, $offset = 0) {
+  function ipos ($needle, $offset = 0) {
     return mb_stripos($this->s, $needle, $offset);
   }
 
@@ -54,7 +54,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $offset The position to start searching
    * @return int
    */
-  function rpos($needle, $offset = 0) {
+  function rpos ($needle, $offset = 0) {
     return mb_strrpos($this->s, $needle, $offset);
   }
 
@@ -64,7 +64,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $offset The position to start searching
    * @return int
    */
-  function ripos($needle, $offset = 0) {
+  function ripos ($needle, $offset = 0) {
     return mb_strripos($this->s, $needle, $offset);
   }
 
@@ -75,7 +75,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * a maximum of limit elements with the last element containing the rest of string.
    * @return array|ArrayClass
    */
-  function explode($delimiter, $limit = 0xFFFFFF) {
+  function explode ($delimiter, $limit = 0xFFFFFF) {
     // split in utf-8 characters
     if ($delimiter == "") {
       $l = min($this->len(), $limit);
@@ -94,7 +94,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param string $charlist Characters to strip
    * @return string|StringClass
    */
-  function trim($charlist = " \t\n\r\0\x0B") {
+  function trim ($charlist = " \t\n\r\0\x0B") {
     return trim($this->s, $charlist);
   }
 
@@ -103,7 +103,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param string $charlist Characters to strip
    * @return string|StringClass
    */
-  function ltrim($charlist = " \t\n\r\0\x0B") {
+  function ltrim ($charlist = " \t\n\r\0\x0B") {
     return ltrim($this->s, $charlist);
   }
 
@@ -112,7 +112,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param string $charlist Characters to strip
    * @return string|StringClass
    */
-  function rtrim($charlist = " \t\n\r\0\x0B") {
+  function rtrim ($charlist = " \t\n\r\0\x0B") {
     return rtrim($this->s, $charlist);
   }
 
@@ -123,7 +123,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $padType STR_PAD_LEFT, STR_PAD_RIGHT (default) or STR_PAD_BOTH
    * @return string|StringClass
    */
-  function pad($padLength, $padString = " ", $padType = STR_PAD_RIGHT) {
+  function pad ($padLength, $padString = " ", $padType = STR_PAD_RIGHT) {
     // padLength == byte length, so calculate it correctly
     $padLength += (strlen($this->s) - $this->len());
     $padStringByteToCharRatio = strlen($padString) / mb_strlen($padString);
@@ -139,7 +139,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Get the string length in characters
    * @return int
    */
-  function len() {
+  function len () {
     return mb_strlen($this->s);
   }
 
@@ -147,7 +147,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Make a string lowercase
    * @return string|StringClass
    */
-  function tolower() {
+  function tolower () {
     return mb_strtolower($this->s);
   }
 
@@ -155,7 +155,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Make a string uppercase
    * @return string|StringClass
    */
-  function toupper() {
+  function toupper () {
     return mb_strtoupper($this->s);
   }
 
@@ -165,7 +165,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $length
    * @return string|StringClass
    */
-  function substr($start = 0, $length = 0xFFFFFFF) {
+  function substr ($start = 0, $length = 0xFFFFFFF) {
     return mb_substr($this->s, $start, $length);
   }
 
@@ -176,7 +176,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $count If set, the number of replacements performed
    * @return string|StringClass
    */
-  function replace($search, $replace, &$count = NULL) {
+  function replace ($search, $replace, &$count = NULL) {
     return str_replace($search, $replace, $this->s, $count);
   }
 
@@ -187,7 +187,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $count If set, the number of replacements performed
    * @return string|StringClass
    */
-  function ireplace($search, $replace, &$count = NULL) {
+  function ireplace ($search, $replace, &$count = NULL) {
     return str_ireplace($search, $replace, $this->s, $count);
   }
 
@@ -202,7 +202,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $offset Alternate start of the search (in characters)
    * @return int
    */
-  function preg_match($pattern, &$matches = NULL, $flags = 0, $offset = 0) {
+  function preg_match ($pattern, &$matches = NULL, $flags = 0, $offset = 0) {
     if (!is_array($matches)) $matches = array();
     // convert offset from characters to bytes
     if ($offset) $offset = strlen($this->substr(0, $offset));
@@ -224,7 +224,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $offset Alternate start of the search (in characters)
    * @return int
    */
-  function preg_match_all($pattern, &$matches = NULL, $flags = PREG_PATTERN_ORDER, $offset = 0) {
+  function preg_match_all ($pattern, &$matches = NULL, $flags = PREG_PATTERN_ORDER, $offset = 0) {
     if (!is_array($matches)) $matches = array();
     // convert offset from characters to bytes
     if ($offset) $offset = strlen($this->substr(0, $offset));
@@ -249,7 +249,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $count If specified it is filled with the number of replacements done
    * @return string|StringClass
    */
-  function preg_replace($pattern , $replacement , $limit = -1, &$count = NULL) {
+  function preg_replace ($pattern , $replacement , $limit = -1, &$count = NULL) {
     return preg_replace($pattern, $replacement, $this->s, $limit, $count);
   }
 
@@ -258,7 +258,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param array|ArrayClass $haystack
    * @return bool
    */
-  function in_array($haystack) {
+  function in_array ($haystack) {
     if (!is_array($haystack) && ($haystack instanceof ArrayClass)) {
       $haystack = $haystack->raw();
     }
@@ -272,7 +272,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $index
    * @return string|StringClass
    */
-  function charAt($index) {
+  function charAt ($index) {
     return $this->substr($index, 1);
   }
 
@@ -283,7 +283,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $start
    * @return int
    */
-  function indexOf($search, $start = 0) {
+  function indexOf ($search, $start = 0) {
     $pos = s($this->substr($start))->pos($search);
     return ($pos === FALSE) ? -1 : $pos+$start;
   }
@@ -295,7 +295,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $start
    * @return int
    */
-  function lastIndexOf($search, $start = 0) {
+  function lastIndexOf ($search, $start = 0) {
     $pos = s($this->substr(0, $start))->rpos($search);
     return ($pos === FALSE) ? -1 : $pos;
   }
@@ -305,7 +305,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param string $regexp
    * @return array|ArrayClass|null
    */
-  function match($regexp) {
+  function match ($regexp) {
     $matches = array();
     if ($this->preg_match($regexp, $matches)) {
       return $matches;
@@ -321,7 +321,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $limit
    * @return array|ArrayClass
    */
-  function split($separator = NULL, $limit = 0xFFFFFF) {
+  function split ($separator = NULL, $limit = 0xFFFFFF) {
     if ($separator === NULL) return array($this->s);
     return $this->explode($separator, $limit);
   }
@@ -335,7 +335,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * @param int $end
    * @return string|StringClass
    */
-  function substring($start, $end = NULL) {
+  function substring ($start, $end = NULL) {
     return $this->substr($start, ($end !== NULL) ? $end-$start : 0xFFFFFFF);
   }
 
@@ -343,7 +343,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Convert to lowercase
    * @return string|StringClass
    */
-  function toLowerCase() {
+  function toLowerCase () {
     return $this->tolower();
   }
 
@@ -351,7 +351,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Convert to uppercase
    * @return string|StringClass
    */
-  function toUpperCase() {
+  function toUpperCase () {
     return $this->toupper();
   }
 
@@ -361,7 +361,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Removes whitespace from the left end of a string
    * @return string|StringClass
    */
-  function trimLeft() {
+  function trimLeft () {
     return $this->ltrim();
   }
 
@@ -369,7 +369,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Removes whitespace from the right end of a string
    * @return string|StringClass
    */
-  function trimRight() {
+  function trimRight () {
     return $this->rtrim();
   }
 
@@ -377,7 +377,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Return the internal raw string value
    * @return string|StringClass
    */
-  function valueOf() {
+  function valueOf () {
     return $this->s;
   }
 
@@ -388,7 +388,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * {@see https://www.owasp.org/index.php/Abridged_XSS_Prevention_Cheat_Sheet}
    * @return string|StringClass
    */
-  function html() {
+  function html () {
     $s = htmlspecialchars($this->s, ENT_QUOTES, "UTF-8");
     $s = s($s)->replace("/", "&#x2F;");
     $s = s($s)->replace("&apos;", "&#039;");
@@ -400,7 +400,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * {@see https://www.owasp.org/index.php/Abridged_XSS_Prevention_Cheat_Sheet}
    * @return string|StringClass
    */
-  function script() {
+  function script () {
     return json_encode($this->s, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
   }
 
@@ -409,7 +409,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * {@see https://www.owasp.org/index.php/Abridged_XSS_Prevention_Cheat_Sheet}
    * @return string|StringClass
    */
-  function json() {
+  function json () {
     return $this->script();
   }
 
@@ -418,27 +418,27 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
   /**
    * @return \ArrayIterator|\Traversable
    */
-  function getIterator() {
+  function getIterator () {
     $o = new \ArrayObject($this->explode(""));
     return $o->getIterator();
   }
 
 // ArrayAccess
 
-  function offsetExists($offset) {
+  function offsetExists ($offset) {
     return $offset < $this->len();
   }
 
-  function offsetGet($offset) {
+  function offsetGet ($offset) {
     return $this->substr($offset, 1);
   }
 
-  function offsetSet($offset, $value) {
+  function offsetSet ($offset, $value) {
     $char = s($value)->substr(0, 1);
     $this->s = $this->substr(0, $offset) . $char . $this->substr($offset + 1);
   }
 
-  function offsetUnset($offset) {
+  function offsetUnset ($offset) {
     $this->s = $this->substr(0, $offset);
   }
 
@@ -449,7 +449,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * {@see http://www.icosaedro.it/phplint/phpdoc.html#types}
    * @return \O\VariableType
    */
-  function parse_type() {
+  function parse_type () {
     $type = $this->s;
     $matches = array();
     $isArray = FALSE;
@@ -491,7 +491,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Set this string object to the empty string
    * @return string|StringClass
    */
-  function clear() {
+  function clear () {
     return $this->s = "";
   }
 
@@ -499,7 +499,7 @@ class StringClass implements \IteratorAggregate, \ArrayAccess {
    * Return the internal primitive string value
    * @return string
    */
-  function raw() {
+  function raw () {
     return $this->s;
   }
 
@@ -513,7 +513,7 @@ class VariableType {
   /** @var string */
   public $value = "void";
 
-  public function __construct($isArray = FALSE, $key = "void", $value = "void") {
+  public function __construct ($isArray = FALSE, $key = "void", $value = "void") {
     $this->isArray = $isArray;
     $this->key = $key;
     $this->value = $value;
@@ -524,7 +524,7 @@ class VariableType {
  * @param $p string
  * @return \O\StringClass
  */
-function s($p) {
+function s ($p) {
   if ($p instanceof StringClass) {
     return $p;
   } else {

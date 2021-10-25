@@ -8,7 +8,7 @@ namespace O;
 class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
   private $a;
 
-  function __construct(&$a) {
+  function __construct (&$a) {
     $this->a =& $a;
   }
 
@@ -17,7 +17,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param int $mode If set to COUNT_RECURSIVE, will recursively count the array.
    * @return int
    */
-  function count($mode = COUNT_NORMAL) {
+  function count ($mode = COUNT_NORMAL) {
     return count($this->a, $mode);
   }
 
@@ -27,7 +27,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param bool $strict If true will also compare the types
    * @return bool
    */
-  function has($needle, $strict = FALSE) {
+  function has ($needle, $strict = FALSE) {
     return in_array($needle, $this->a, $strict);
   }
 
@@ -37,7 +37,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param bool $strict If true will also compare the types
    * @return mixed
    */
-  function search($needle, $strict = FALSE) {
+  function search ($needle, $strict = FALSE) {
     return array_search($needle, $this->a, $strict);
   }
 
@@ -45,7 +45,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Shift an element off the beginning of array
    * @return mixed
    */
-  function shift() {
+  function shift () {
     return array_shift($this->a);
   }
 
@@ -54,7 +54,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param mixed $value1 First value to prepend
    * @return int
    */
-  function unshift($value1) {
+  function unshift ($value1) {
     $args = func_get_args();
     for ($i = count($args) - 1; $i >= 0; $i--) {
       array_unshift($this->a, $args[$i]);
@@ -67,7 +67,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param mixed $key Value to check
    * @return bool
    */
-  function key_exists($key) {
+  function key_exists ($key) {
     return array_key_exists($key, $this->a);
   }
 
@@ -76,7 +76,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param string $glue Defaults to an empty string
    * @return string|StringClass
    */
-  function implode($glue = "") {
+  function implode ($glue = "") {
     return implode($this->a, $glue);
   }
 
@@ -85,7 +85,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Due to limitations the additional parameters of array_keys are not supported.
    * @return Array|ArrayClass
    */
-  function keys() {
+  function keys () {
     return array_keys($this->a);
   }
 
@@ -93,7 +93,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Return all the values of an array
    * @return Array|ArrayClass
    */
-  function values() {
+  function values () {
     return array_values($this->a);
   }
 
@@ -101,7 +101,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Pop the element off the end of array
    * @return mixed
    */
-  function pop() {
+  function pop () {
     return array_pop($this->a);
   }
 
@@ -110,7 +110,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param mixed $value1 The first value to append
    * @return int
    */
-  function push($value1) {
+  function push ($value1) {
     $args = func_get_args();
     for ($i = 0; $i < count($args); $i++) {
       array_push($this->a, $args[$i]);
@@ -125,7 +125,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param bool $preserve_keys Preserve the array's keys
    * @return Array|ArrayClass
    */
-  function slice($offset, $length = NULL, $preserve_keys = false) {
+  function slice ($offset, $length = NULL, $preserve_keys = false) {
     return array_slice($this->a, $offset, $length, $preserve_keys);
   }
 
@@ -136,7 +136,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param Array $replacement Array to insert instead of the spliced segment.
    * @return Array|ArrayClass
    */
-  function splice($offset, $length = 0, $replacement = NULL) {
+  function splice ($offset, $length = 0, $replacement = NULL) {
     if ($replacement == NULL) $replacement = array();
     return array_splice($this->a, $offset, $length, $replacement);
   }
@@ -147,7 +147,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param Array $array2 The second array to merge
    * @return Array|ArrayClass
    */
-  function merge($array1, $array2) {
+  function merge ($array1, $array2) {
     return call_user_func_array("array_merge", array_merge(array($this->a), func_get_args()));
   }
 
@@ -158,7 +158,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param Array $array2 The second array whose items to pass as the second argument of $callback.
    * @return Array|ArrayClass
    */
-  function map($callback, $array2 = NULL) {
+  function map ($callback, $array2 = NULL) {
     $args = func_get_args();
     $params = a($args)->slice(1);
     a($params)->unshift($callback, $this->a);
@@ -174,7 +174,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param mixed $initial The initial value for the first iteration
    * @return mixed
    */
-  function reduce($callback, $initial = NULL) {
+  function reduce ($callback, $initial = NULL) {
     return array_reduce($this->a, $callback, $initial);
   }
 
@@ -183,7 +183,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * @param Callable $callback If this returns true for a value, the value is in the result array.
    * @return Array|ArrayClass
    */
-  function filter($callback = NULL) {
+  function filter ($callback = NULL) {
     return array_filter($this->a, $callback);
   }
 
@@ -191,7 +191,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Calculate the sum of values in an array
    * @return number
    */
-  function sum() {
+  function sum () {
     return array_sum($this->a);
   }
 
@@ -199,7 +199,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Set the internal pointer of an array to its first element
    * @return mixed The first array value
    */
-  function begin() {
+  function begin () {
     return reset($this->a);
   }
 
@@ -207,7 +207,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Return the current element in an array
    * @return mixed
    */
-  function current() {
+  function current () {
     return current($this->a);
   }
 
@@ -215,7 +215,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Advance the internal array pointer of an array
    * @return mixed The next array value
    */
-  function next() {
+  function next () {
     return next($this->a);
   }
 
@@ -223,7 +223,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Set the internal pointer of an array to its last element
    * @return mixed The last array value
    */
-  function end() {
+  function end () {
     return end($this->a);
   }
 
@@ -231,7 +231,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Return the current key and value pair from an array and advance the array cursor
    * @return Array|ArrayClass
    */
-  function each() {
+  function each () {
     return each($this->a);
   }
 
@@ -239,7 +239,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Remove all elements from the array
    * @return Array|ArrayClass
    */
-  function clear() {
+  function clear () {
     return $this->a = array();
   }
 
@@ -247,13 +247,13 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
    * Return the internal raw Array for this ArrayClass object
    * @return Array
    */
-  function raw() {
+  function raw () {
     return $this->a;
   }
 
 // IteratorAggregate
 
-  function getIterator() {
+  function getIterator () {
     $o = new \ArrayObject($this->a);
     return $o->getIterator();
   }
@@ -262,19 +262,19 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
 
 // ArrayAccess
 
-  function offsetExists($offset) {
+  function offsetExists ($offset) {
     return isset($this->a[$offset]);
   }
 
-  function offsetGet($offset) {
+  function offsetGet ($offset) {
     return $this->a[$offset];
   }
 
-  function offsetSet($offset, $value) {
+  function offsetSet ($offset, $value) {
     $this->a[$offset] = $value;
   }
 
-  function offsetUnset($offset) {
+  function offsetUnset ($offset) {
     unset($this->a[$offset]);
   }
 
@@ -284,7 +284,7 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
  * @param string $p
  * @return \O\ArrayClass
  */
-function a(&$p) {
+function a (&$p) {
   if ($p instanceof ArrayClass) {
     return $p;
   } else {

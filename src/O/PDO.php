@@ -19,7 +19,7 @@ class PDO extends \PDO {
    */
   public static $dateFormat = "Y-m-d H:i:s";
 
-  public function __construct($dsn, $username="", $password="", $options=array()) {
+  public function __construct ($dsn, $username="", $password="", $options=array()) {
     $dsn = self::decorateDSN($dsn);
     parent::__construct($dsn, $username, $password, $options);
     if (isset($options["fluent"])) $this->fluent = !!$options["fluent"];
@@ -29,7 +29,7 @@ class PDO extends \PDO {
     $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   }
 
-  protected function decorateDSN($dsn) {
+  protected function decorateDSN ($dsn) {
     // default to utf8 if no charset if given
     if (strpos($dsn, "charset=") === FALSE) {
       if ((strpos($dsn, "mysql:") === 0) || (strpos($dsn, "pgsql:") === 0)) {
@@ -45,21 +45,21 @@ class PDO extends \PDO {
   /**
    * @return bool
    */
-  public function isFluent() {
+  public function isFluent () {
     return $this->fluent;
   }
 
   /**
    * @param PDOProfiler $profiler
    */
-  public function setProfiler($profiler) {
+  public function setProfiler ($profiler) {
     $this->profiler = $profiler;
   }
 
   /**
    * @return PDOProfiler
    */
-  public function getProfiler() {
+  public function getProfiler () {
     return $this->profiler;
   }
 
@@ -71,7 +71,7 @@ class PDO extends \PDO {
    * @param int $fetchStyle
    * @return mixed
    */
-  public function fetchAll($query, $bind = array(), $fetchStyle = NULL) {
+  public function fetchAll ($query, $bind = array(), $fetchStyle = NULL) {
     $args = array_slice(func_get_args(), 2);
     $args[0] = $fetchStyle ?: $this->getAttribute(PDO::ATTR_DEFAULT_FETCH_MODE);
     return $this->_internalFetch("fetchAll", $query, $bind, $args);
@@ -85,7 +85,7 @@ class PDO extends \PDO {
    * @param int $fetchStyle
    * @return mixed
    */
-  public function fetchRow($query, $bind = array(), $fetchStyle = NULL) {
+  public function fetchRow ($query, $bind = array(), $fetchStyle = NULL) {
     $args = array_slice(func_get_args(), 2);
     $args[0] = $fetchStyle ?: $this->getAttribute(PDO::ATTR_DEFAULT_FETCH_MODE);
     return $this->_internalFetch("fetch", $query, $bind, $args);
@@ -98,7 +98,7 @@ class PDO extends \PDO {
    * @param int $columnNumber
    * @return array
    */
-  public function fetchColumn($query, $bind = array(), $columnNumber = 0) {
+  public function fetchColumn ($query, $bind = array(), $columnNumber = 0) {
     return $this->fetchAll($query, $bind, PDO::FETCH_COLUMN, $columnNumber);
   }
 
@@ -109,7 +109,7 @@ class PDO extends \PDO {
    * @param mixed $default Return this if the query has no results
    * @return mixed
    */
-  public function fetchOne($query, $bind = array(), $default = NULL) {
+  public function fetchOne ($query, $bind = array(), $default = NULL) {
     $value = $this->_internalFetch("fetchColumn", $query, $bind, array(0));
     return ($value === FALSE) ? $default : $value;
   }
@@ -121,7 +121,7 @@ class PDO extends \PDO {
    * @param string $returning param for lastInsertId
    * @return string|int result of lastInsertId($returning)
    */
-  public function insert($table, $bind = array(), $returning = NULL) {
+  public function insert ($table, $bind = array(), $returning = NULL) {
     $bind = $this->_convertBind($bind, "insert");
     $values = array();
     for ($i = 0; $i < count($bind); $i++) $values[] = "?";
@@ -145,7 +145,7 @@ class PDO extends \PDO {
    * @param mixed $whereBind assoc array or object of key/value pairs
    * @return int affected number of rows
    */
-  public function update($table, $values, $where = "", $whereBind = NULL) {
+  public function update ($table, $values, $where = "", $whereBind = NULL) {
     $query =
       "update ".$table.PHP_EOL .
       "set" . PHP_EOL;
@@ -187,7 +187,7 @@ class PDO extends \PDO {
    * @param mixed $whereBind assoc array or object of key/value pairs
    * @return int affected number of rows
    */
-  public function delete($table, $where = "", $whereBind = NULL) {
+  public function delete ($table, $where = "", $whereBind = NULL) {
     $query = "delete from ".$table.PHP_EOL;
     $bind = array();
     if (!empty($where)) {
@@ -208,7 +208,7 @@ class PDO extends \PDO {
    * @param string $statement
    * @return int
    */
-  public function exec($statement) {
+  public function exec ($statement) {
     $id = $this->_beforeQuery($statement);
     $result = parent::exec($statement);
     $this->_afterQuery($id);
@@ -220,7 +220,7 @@ class PDO extends \PDO {
    * @param array $driver_options
    * @return PDOStatement
    */
-  public function prepare($statement, $driver_options = array()) {
+  public function prepare ($statement, $driver_options = array()) {
     return parent::prepare($statement, $driver_options);
   }
 
@@ -228,7 +228,7 @@ class PDO extends \PDO {
    * @param string $statement
    * @return PDOStatement
    */
-  public function query($statement) {
+  public function query ($statement) {
     $id = $this->_beforeQuery($statement);
     $result = parent::query($statement);
     $this->_afterQuery($id);
@@ -238,7 +238,7 @@ class PDO extends \PDO {
   /**
    * @return bool|PDO
    */
-  public function beginTransaction() {
+  public function beginTransaction () {
     $result = parent::beginTransaction();
     return $this->fluent ? $this : $result;
   }
@@ -246,7 +246,7 @@ class PDO extends \PDO {
   /**
    * @return bool|PDO
    */
-  public function commit() {
+  public function commit () {
     $result = parent::commit();
     return $this->fluent ? $this : $result;
   }
@@ -254,7 +254,7 @@ class PDO extends \PDO {
   /**
    * @return bool|PDO
    */
-  public function rollBack() {
+  public function rollBack () {
     $result = parent::rollBack();
     return $this->fluent ? $this : $result;
   }
@@ -264,12 +264,12 @@ class PDO extends \PDO {
    * @param mixed $value
    * @return bool|PDO
    */
-  public function setAttribute($attribute, $value) {
+  public function setAttribute ($attribute, $value) {
     $result = parent::setAttribute($attribute, $value);
     return $this->fluent ? $this : $result;
   }
 
-  private function _internalFetch($method, $query, $bind, $args) {
+  private function _internalFetch ($method, $query, $bind, $args) {
     /** @var \O\PDOStatement $stmt */
     $stmt = $this->prepare($query);
     $stmt->bindParams($bind);
@@ -284,7 +284,7 @@ class PDO extends \PDO {
    * @return array
    * @throws \PDOException
    */
-  private function _convertBind($bind) {
+  private function _convertBind ($bind) {
     if (is_object($bind)) $bind = (array) $bind;
     if (!is_array($bind)) {
       throw new \PDOException(
@@ -297,7 +297,7 @@ class PDO extends \PDO {
    * @param mixed $bind
    * @return bool
    */
-  private function _isAssoc($bind) {
+  private function _isAssoc ($bind) {
     if (is_object($bind)) return true;
     if (is_array($bind)) {
       // true if array keys are not sequential and numeric
@@ -311,7 +311,7 @@ class PDO extends \PDO {
    * @param $params
    * @return int|null
    */
-  private function _beforeQuery($query, $params = NULL) {
+  private function _beforeQuery ($query, $params = NULL) {
     if ($this->profiler) {
       return $this->profiler->queryStart($query, $params);
     } else {
@@ -322,7 +322,7 @@ class PDO extends \PDO {
   /**
    * @param int $id
    */
-  private function _afterQuery($id) {
+  private function _afterQuery ($id) {
     if ($this->profiler) {
       $this->profiler->queryEnd($id);
     }
@@ -341,7 +341,7 @@ class PDOStatement extends \PDOStatement {
    * @param PDO $pdo
    * Return $this from API's that would return bool
    */
-  protected function __construct($pdo) {
+  protected function __construct ($pdo) {
     $this->pdo = $pdo;
   }
 
@@ -349,7 +349,7 @@ class PDOStatement extends \PDOStatement {
    * @param array|object $bind
    * @return PDOStatement|bool
    */
-  public function bindParams($bind) {
+  public function bindParams ($bind) {
     $success = TRUE;
     // support object with key value pairs (= named parameters)
     if (is_object($bind)) {
@@ -384,7 +384,7 @@ class PDOStatement extends \PDOStatement {
    * @param mixed $driverdata
    * @return bool|PDOStatement
    */
-  public function bindColumn($column, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL) {
+  public function bindColumn ($column, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL) {
     $result = parent::bindColumn($column, $param, $type, $maxlen, $driverdata);
     return $this->pdo->isFluent() ? $this : $result;
   }
@@ -397,7 +397,7 @@ class PDOStatement extends \PDOStatement {
    * @param mixed $driver_options
    * @return bool|PDOStatement
    */
-  public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR, $length = NULL, $driver_options = NULL) {
+  public function bindParam ($parameter, &$variable, $data_type = PDO::PARAM_STR, $length = NULL, $driver_options = NULL) {
     // ArrayClass, StringClass, ChainableClass
     if (is_object($variable) && method_exists($variable, "raw")) {
       $variable = $variable->raw();
@@ -418,7 +418,7 @@ class PDOStatement extends \PDOStatement {
    * @param int $data_type
    * @return bool|PDOStatement
    */
-  public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR) {
+  public function bindValue ($parameter, $value, $data_type = PDO::PARAM_STR) {
     if ($value instanceof \DateTime) {
       $value = $value->format(PDO::$dateFormat);
     };
@@ -430,7 +430,7 @@ class PDOStatement extends \PDOStatement {
   /**
    * @return bool|PDOStatement
    */
-  public function closeCursor() {
+  public function closeCursor () {
     $result = parent::closeCursor();
     return $this->pdo->isFluent() ? $this : $result;
   }
@@ -439,7 +439,7 @@ class PDOStatement extends \PDOStatement {
    * @param array $input_parameters
    * @return bool|PDOStatement
    */
-  public function execute($input_parameters = NULL) {
+  public function execute ($input_parameters = NULL) {
     if ($this->pdo->getProfiler()) {
       $id = $this->pdo->getProfiler()->queryStart(
         $this->queryString, $input_parameters ?: $this->params);
@@ -452,7 +452,7 @@ class PDOStatement extends \PDOStatement {
   /**
    * @return bool|PDOStatement
    */
-  public function nextRowSet() {
+  public function nextRowSet () {
     $result = parent::nextRowSet();
     return $this->pdo->isFluent() ? $this : $result;
   }
@@ -462,7 +462,7 @@ class PDOStatement extends \PDOStatement {
    * @param mixed $value
    * @return bool|PDOStatement
    */
-  public function setAttribute($attribute, $value) {
+  public function setAttribute ($attribute, $value) {
     $result = parent::setAttribute($attribute, $value);
     return $this->pdo->isFluent() ? $this : $result;
   }
@@ -472,7 +472,7 @@ class PDOStatement extends \PDOStatement {
    * @param array $params
    * @return bool|PDOStatement
    */
-  public function setFetchMode($mode,$params = NULL) {
+  public function setFetchMode ($mode,$params = NULL) {
     $result = parent::setFetchMode($mode,$params);
     return $this->pdo->isFluent() ? $this : $result;
   }
@@ -482,7 +482,7 @@ class PDOStatement extends \PDOStatement {
    * @param array $arr
    * @return bool
    */
-  private function _isAssocArray($arr) {
+  private function _isAssocArray ($arr) {
     return array_keys($arr) !== range(0, count($arr) - 1);
   }
 }
@@ -493,7 +493,7 @@ class PDOProfiler {
    */
   protected $profiles = array();
 
-  public function clear() {
+  public function clear () {
     $this->profiles = array();
   }
 
@@ -503,7 +503,7 @@ class PDOProfiler {
    * @param mixed $bind
    * @return int The id of the query profile
    */
-  public function queryStart($text, $bind) {
+  public function queryStart ($text, $bind) {
     $this->profiles[] = array(NULL, microtime(true), $text, $bind);
     return count($this->profiles) - 1;
   }
@@ -512,7 +512,7 @@ class PDOProfiler {
    * Finish a query being profiled
    * @param int $profileID
    */
-  public function queryEnd($profileID) {
+  public function queryEnd ($profileID) {
     if ($profileID === NULL) return;
     if (isset($this->profiles[$profileID])) {
       $arr =& $this->profiles[$profileID];
@@ -524,7 +524,7 @@ class PDOProfiler {
    * Return the query profile data
    * @return array
    */
-  public function getProfiles() {
+  public function getProfiles () {
     return $this->profiles;
   }
 }

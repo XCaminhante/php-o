@@ -5,7 +5,7 @@ namespace O;
 /**
  * secure session_start function (overrides built-in)
  */
-function session_start() {
+function session_start () {
   // verify that session settings are secure
   if (session_id()) {
     if (ini_get("session.auto_start")) {
@@ -39,12 +39,12 @@ function session_start() {
   };
 };
 // obtain the anti-CSRF token
-function get_csrf_token() {
+function get_csrf_token () {
   if (!session_id()) session_start();
   return $_SESSION["__O_ANTI_CSRF_TOKEN"];
 };
 // check that CSRF token was given
-function is_csrf_protected($token = "") {
+function is_csrf_protected ($token = "") {
   if (empty($token) && isset($_REQUEST["csrftoken"])) {
     $token = $_REQUEST["csrftoken"];
   };
@@ -52,19 +52,19 @@ function is_csrf_protected($token = "") {
 };
 
 class Session {
-  function __construct() {
+  function __construct () {
     if (!session_id()) session_start();
   }
 
-  function getCSRFToken() {
+  function getCSRFToken () {
     return get_csrf_token();
   }
 
-  function isCSRFProtected($token = "") {
+  function isCSRFProtected ($token = "") {
     return is_csrf_protected($token);
   }
 
-  function &__get($prop) {
+  function &__get ($prop) {
     if (isset($_SESSION[$prop])) {
       return $_SESSION[$prop];
     } else {
@@ -73,15 +73,15 @@ class Session {
     }
   }
 
-  function __set($prop, $value) {
+  function __set ($prop, $value) {
     return $_SESSION[$prop] = $value;
   }
 
-  function __isset($prop) {
+  function __isset ($prop) {
     return isset($_SESSION[$prop]);
   }
 
-  function __unset($prop) {
+  function __unset ($prop) {
     unset($_SESSION[$prop]);
   }
 }

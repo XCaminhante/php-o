@@ -15,7 +15,7 @@ class DateTime extends \DateTime implements \JsonSerializable {
    *
    * @return String
    */
-  public function __toString() {
+  public function __toString () {
     return $this->format(static::ISO8601);
   }
 
@@ -24,7 +24,7 @@ class DateTime extends \DateTime implements \JsonSerializable {
    *
    * @return string
    */
-  public function jsonSerialize()
+  public function jsonSerialize ()
   {
     return (string) $this;
   }

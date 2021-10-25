@@ -31,7 +31,20 @@
 <v t="caminhante.20211024192337.2"><vh>PHP-O</vh>
 <v t="caminhante.20211024192713.1"><vh>@path .</vh>
 <v t="caminhante.20211024192714.8"><vh>/.git/</vh></v>
-<v t="caminhante.20211024192714.7"><vh>/src/</vh></v>
+<v t="caminhante.20211024192714.7"><vh>/src/</vh>
+<v t="caminhante.20211024200631.1"><vh>/O/</vh>
+<v t="caminhante.20211024200632.10"><vh>@edit ArrayClass.php</vh></v>
+<v t="caminhante.20211024200632.9"><vh>@edit ChainableClass.php</vh></v>
+<v t="caminhante.20211024200632.8"><vh>@edit DateTime.php</vh></v>
+<v t="caminhante.20211024200632.5"><vh>@edit PDO.php</vh></v>
+<v t="caminhante.20211024200632.4"><vh>@edit ReflectionClass.php</vh></v>
+<v t="caminhante.20211024200632.3"><vh>@edit Session.php</vh></v>
+<v t="caminhante.20211024200632.2"><vh>@edit StringClass.php</vh></v>
+<v t="caminhante.20211024200632.7"><vh>@file O.php</vh></v>
+<v t="caminhante.20211024200632.6"><vh>@file ObjectClass.php</vh></v>
+<v t="caminhante.20211024200632.1"><vh>@file Validator.php</vh></v>
+</v>
+</v>
 <v t="caminhante.20211024192714.6"><vh>/tests/</vh></v>
 <v t="caminhante.20211024194321.1"><vh>/vendor/</vh></v>
 <v t="caminhante.20211024192714.3"><vh>@auto README.md</vh></v>
@@ -319,5 +332,6 @@ g.es(execute(cmd))
 <t tx="caminhante.20211024194140.1"></t>
 <t tx="caminhante.20211024194140.2"></t>
 <t tx="caminhante.20211024194321.1">@path vendor</t>
+<t tx="caminhante.20211024200631.1">@path O</t>
 </tnodes>
 </leo_file>

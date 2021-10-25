@@ -16,15 +16,15 @@ class ChainableClass implements \IteratorAggregate, \ArrayAccess
 {
   private $o;
 
-  function __construct($o) {
+  function __construct ($o) {
     $this->o = $o;
   }
 
-  function __toString() {
+  function __toString () {
     return (string) $this->o;
   }
 
-  private static function asChainable($p) {
+  private static function asChainable ($p) {
     switch (gettype($p)) {
       case "string":
         return cs($p);
@@ -46,11 +46,11 @@ class ChainableClass implements \IteratorAggregate, \ArrayAccess
    * @param array $args
    * @return mixed|\O\ChainableClass
    */
-  function __call($fn, $args) {
+  function __call ($fn, $args) {
     return self::asChainable(call_user_func_array(array($this->o, $fn), $args));
   }
 
-  function raw() {
+  function raw () {
     if (is_object($this->o) && method_exists($this->o, "raw")) {
       return call_user_func(array($this->o, "raw"));
     } else {
@@ -63,7 +63,7 @@ class ChainableClass implements \IteratorAggregate, \ArrayAccess
   /**
    * @return \Traversable
    */
-  function getIterator() {
+  function getIterator () {
     if (method_exists($this->o, "getIterator")) {
       return call_user_func(array($this->o, "getIterator"));
     } else {
@@ -73,19 +73,19 @@ class ChainableClass implements \IteratorAggregate, \ArrayAccess
 
 // ArrayAccess
 
-  function offsetExists($offset) {
+  function offsetExists ($offset) {
     return isset($this->o[$offset]);
   }
 
-  function offsetGet($offset) {
+  function offsetGet ($offset) {
     return self::asChainable($this->o[$offset]);
   }
 
-  function offsetSet($offset, $value) {
+  function offsetSet ($offset, $value) {
     $this->o[$offset] = $value;
   }
 
-  function offsetUnset($offset) {
+  function offsetUnset ($offset) {
     unset($this->o[$offset]);
   }
 
@@ -95,7 +95,7 @@ class ChainableClass implements \IteratorAggregate, \ArrayAccess
  * @param mixed $o
  * @return \O\ChainableClass
  */
-function c($o) {
+function c ($o) {
   if ($o instanceof ChainableClass) {
     return $o;
   } else {
@@ -107,7 +107,7 @@ function c($o) {
  * @param string $o
  * @return \O\ChainableClass|\O\StringClass
  */
-function cs($o) {
+function cs ($o) {
   return c(s($o));
 }
 
@@ -115,7 +115,7 @@ function cs($o) {
  * @param array $o
  * @return \O\ChainableClass|\O\ArrayClass
  */
-function ca($o) {
+function ca ($o) {
   return c(a($o));
 }
 
@@ -123,6 +123,6 @@ function ca($o) {
  * @param mixed $o
  * @return \O\ChainableClass|\O\ObjectClass
  */
-function co($o) {
+function co ($o) {
   return c(o($o));
 }

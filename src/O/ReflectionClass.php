@@ -13,7 +13,7 @@ class ReflectionClass extends \ReflectionClass
    * @param int $filter
    * @return \O\ReflectionMethod[]
    */
-  public function getMethods($filter = NULL) {
+  public function getMethods ($filter = NULL) {
     $methods = parent::getMethods($filter);
     foreach ($methods as $index => $method) {
       $methods[$index] = new ReflectionMethod(
@@ -26,7 +26,7 @@ class ReflectionClass extends \ReflectionClass
    * @param string $name
    * @return \O\ReflectionMethod
    */
-  public function getMethod($name) {
+  public function getMethod ($name) {
     return new ReflectionMethod($this->getName(), $name);
   }
 
@@ -35,7 +35,7 @@ class ReflectionClass extends \ReflectionClass
    * @param int $filter
    * @return \O\ReflectionProperty[]
    */
-  public function getProperties($filter = NULL) {
+  public function getProperties ($filter = NULL) {
     if ($filter === NULL) {
       $filter =
         ReflectionProperty::IS_STATIC |
@@ -55,7 +55,7 @@ class ReflectionClass extends \ReflectionClass
    * @param string $name
    * @return \O\ReflectionProperty
    */
-  public function getProperty($name) {
+  public function getProperty ($name) {
     return new ReflectionProperty($this->getName(), $name);
   }
 
@@ -63,7 +63,7 @@ class ReflectionClass extends \ReflectionClass
    * @param bool $onlytext
    * @return string
    */
-  public function getDocComment($onlytext = FALSE) {
+  public function getDocComment ($onlytext = FALSE) {
     $doc = parent::getDocComment();
     if ($onlytext) {
       $doc = s($doc)->preg_replace("/(?<=[\r\n])[\\s]*\*(\ )?(?![\/])/", "");
@@ -76,7 +76,7 @@ class ReflectionClass extends \ReflectionClass
 
 class ReflectionProperty extends \ReflectionProperty
 {
-  public function getDocComment($onlytext = FALSE) {
+  public function getDocComment ($onlytext = FALSE) {
     $doc = parent::getDocComment();
     if ($onlytext) {
       $doc = s($doc)->preg_replace("/(?<=[\r\n])[\\s]*\*(\ )?(?![\/])/", "");
@@ -86,7 +86,7 @@ class ReflectionProperty extends \ReflectionProperty
     return (string) $doc;
   }
 
-  public function getType() {
+  public function getType () {
     $doc = $this->getDocComment();
     $matches = array();
     $pattern = "/\@var[\\s]+([\\S]+)/";
@@ -100,7 +100,7 @@ class ReflectionProperty extends \ReflectionProperty
 
 class ReflectionMethod extends \ReflectionMethod
 {
-  public function getDocComment($onlytext = FALSE) {
+  public function getDocComment ($onlytext = FALSE) {
     $doc = parent::getDocComment();
     if ($onlytext) {
       $doc = s($doc)->preg_replace("/(?<=[\r\n])[\\s]*\*(\ )?(?![\/])/", "");
@@ -110,11 +110,11 @@ class ReflectionMethod extends \ReflectionMethod
     return (string) $doc;
   }
 
-  public function getDeclaringClass() {
+  public function getDeclaringClass () {
     return new ReflectionClass(parent::getDeclaringClass()->getName());
   }
 
-  public function getParameters() {
+  public function getParameters () {
     $params = parent::getParameters();
     foreach ($params as $index => $param) {
       $params[$index] = new ReflectionParameter(
@@ -124,7 +124,7 @@ class ReflectionMethod extends \ReflectionMethod
     return $params;
   }
 
-  public function getParameter($name) {
+  public function getParameter ($name) {
     return new ReflectionParameter(
       array($this->getDeclaringClass()->getName(), $this->getName()),
       $name);
@@ -133,7 +133,7 @@ class ReflectionMethod extends \ReflectionMethod
 
 class ReflectionParameter extends \ReflectionParameter
 {
-  public function getDocComment() {
+  public function getDocComment () {
     $methoddoc = $this->getDeclaringFunction()->getDocComment(TRUE);
     $parts = s($methoddoc)->explode("@param");
     for ($i = 1; $i < count($parts); $i++) $parts[$i] = "@param".$parts[$i];
@@ -147,7 +147,7 @@ class ReflectionParameter extends \ReflectionParameter
     return "";
   }
 
-  public function getDeclaringFunction() {
+  public function getDeclaringFunction () {
     $f = parent::getDeclaringFunction();
     /** @var $f ReflectionMethod */
     if (is_a($f, "ReflectionMethod")) {
