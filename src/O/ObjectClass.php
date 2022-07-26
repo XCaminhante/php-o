@@ -3,7 +3,6 @@
 //@+node:caminhante.20211024200632.6: * @file ObjectClass.php
 //@@first
 namespace O;
-//@@language php
 //@+others
 //@+node:caminhante.20211024201450.1: ** /includes
 if (!class_exists("\\O\\ReflectionClass")) { include("ReflectionClass.php"); }
@@ -13,124 +12,124 @@ if (!class_exists("\\O\\DateTime")) { include("DateTime.php"); }
  * Supporting class for the o() function
  */
 class ObjectClass implements \IteratorAggregate, \ArrayAccess {
-  private $o;
-  //@+others
-  //@+node:caminhante.20211024201604.1: *3* function __construct
-  function __construct ($o) {
-    if (is_string($o)) $o = json_decode($o);
-    if (is_object($o) || is_array($o)) {
-      $this->o = (object) $o;
-    } else {
-      $this->o = NULL;
-    }
+private $o;
+//@+others
+//@+node:caminhante.20211024201604.1: *3* function __construct
+function __construct ($o) {
+  if (is_string($o)) $o = json_decode($o);
+  if (is_object($o) || is_array($o)) {
+    $this->o = (object) $o;
+  } else {
+    $this->o = NULL;
   }
-  //@+node:caminhante.20211024201627.1: *3* function __toString
-  function __toString () {
-    return json_encode($this->o);
-  }
-  //@+node:caminhante.20211024201639.1: *3* function __call
-  function __call ($fn, $args) {
-    if (method_exists($this->o, $fn)) {
-      return call_user_func_array(array($this->o, $fn), $args);
-    } else if (isset($this->o->$fn)) {
-      return call_user_func_array($this->o->$fn, $args);
-    } else { return NULL; }
-  }
-  //@+node:caminhante.20211024201724.1: *3* function __get
-  function __get ($prop) {
-    return $this->o->$prop;
-  }
-  //@+node:caminhante.20211024201728.1: *3* function __set
-  function __set ($prop, $value) {
-    return $this->o->$prop = $value;
-  }
-  //@+node:caminhante.20211024201731.1: *3* function __isset
-  function __isset ($prop) {
-    return isset($this->o->$prop);
-  }
-  //@+node:caminhante.20211024201734.1: *3* function __unset
-  function __unset ($prop) {
-    unset($this->o->$prop);
-  }
-  //@+node:caminhante.20211024201738.1: *3* function cast
-  function cast ($asType = "stdClass") {
-    if ($asType == "stdClass") {
-      return $this->o;
-    } else {
-      if (!class_exists($asType)) { $asType = "O\\".$asType; }
-      if (class_exists($asType)) {
-        if (is_object($this->o)) {
-          $a = (array) $this->o;
-          /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-          $refl = new \O\ReflectionClass($asType);
-          $props = $refl->getProperties(ReflectionProperty::IS_STATIC|ReflectionProperty::IS_PUBLIC);
-          $result = new $asType();
-          // convert properties to the right type
-          foreach ($props as $prop) {
-            $propName = $prop->getName();
-            if (isset($a[$propName])) {
-              $result->$propName = convertType($a[$propName], $prop->getType());
-            }
-          }
-          return $result;
-        } else {
-          return NULL;
-        }
-      } else {
-        throw new \Exception("Unrecognized type: ".$asType);
-      }
-    }
-  }
-  //@+node:caminhante.20211024201742.1: *3* function clear
-  function clear () {
-    return $this->o = new \stdClass();
-  }
-  //@+node:caminhante.20211024201745.1: *3* function raw
-  function raw () {
+}
+//@+node:caminhante.20211024201627.1: *3* function __toString
+function __toString () {
+  return json_encode($this->o);
+}
+//@+node:caminhante.20211024201639.1: *3* function __call
+function __call ($fn, $args) {
+  if (method_exists($this->o, $fn)) {
+    return call_user_func_array(array($this->o, $fn), $args);
+  } else if (isset($this->o->$fn)) {
+    return call_user_func_array($this->o->$fn, $args);
+  } else { return NULL; }
+}
+//@+node:caminhante.20211024201724.1: *3* function __get
+function __get ($prop) {
+  return $this->o->$prop;
+}
+//@+node:caminhante.20211024201728.1: *3* function __set
+function __set ($prop, $value) {
+  return $this->o->$prop = $value;
+}
+//@+node:caminhante.20211024201731.1: *3* function __isset
+function __isset ($prop) {
+  return isset($this->o->$prop);
+}
+//@+node:caminhante.20211024201734.1: *3* function __unset
+function __unset ($prop) {
+  unset($this->o->$prop);
+}
+//@+node:caminhante.20211024201738.1: *3* function cast
+function cast ($asType = "stdClass") {
+  if ($asType == "stdClass") {
     return $this->o;
+  } else {
+    if (!class_exists($asType)) { $asType = "O\\".$asType; }
+    if (class_exists($asType)) {
+      if (is_object($this->o)) {
+        $a = (array) $this->o;
+        /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
+        $refl = new \O\ReflectionClass($asType);
+        $props = $refl->getProperties(ReflectionProperty::IS_STATIC|ReflectionProperty::IS_PUBLIC);
+        $result = new $asType();
+        // convert properties to the right type
+        foreach ($props as $prop) {
+          $propName = $prop->getName();
+          if (isset($a[$propName])) {
+            $result->$propName = convertType($a[$propName], $prop->getType());
+          }
+        }
+        return $result;
+      } else {
+        return NULL;
+      }
+    } else {
+      throw new \Exception("Unrecognized type: ".$asType);
+    }
   }
-  //@+node:caminhante.20211024201751.1: *3* function render
-  function render ($template) {
-    extract((array) $this->o);
-    /** @noinspection PhpIncludeInspection */
-    include $template;
-  }
-  //@+node:caminhante.20211024201755.1: *3* function validate
-  /**
-   * Validate an object using Validator::validate
-   * @param Array $errors Variable to return any found errors in, optional reference.
-   * @return bool Whether the object is valid according to its annootations
-   */
-  function validate (&$errors = NULL) {
-    if (!class_exists("\\O\\Validator")) include("Validator.php");
-    $errors = Validator::validate($this->raw());
-    return empty($errors);
-  }
-  //@+node:caminhante.20211024201823.1: *3* IteratorAggregate
-  //@+node:caminhante.20211024201813.1: *4* function getIterator
-  /** @return \ArrayIterator */
-  function getIterator () {
-    $o = new \ArrayObject($this->o);
-    return $o->getIterator();
-  }
-  //@+node:caminhante.20211024201918.1: *3* ArrayAccess
-  //@+node:caminhante.20211024201922.1: *4* function offsetExists
-  function offsetExists ($offset) {
-    return isset($this->o[$offset]);
-  }
-  //@+node:caminhante.20211024201942.1: *4* function offsetGet
-  function offsetGet ($offset) {
-    return $this->o[$offset];
-  }
-  //@+node:caminhante.20211024201943.1: *4* function offsetSet
-  function offsetSet ($offset, $value) {
-    $this->o[$offset] = $value;
-  }
-  //@+node:caminhante.20211024201945.1: *4* function offsetUnset
-  function offsetUnset ($offset) {
-    unset($this->o[$offset]);
-  }
-  //@-others
+}
+//@+node:caminhante.20211024201742.1: *3* function clear
+function clear () {
+  return $this->o = new \stdClass();
+}
+//@+node:caminhante.20211024201745.1: *3* function raw
+function raw () {
+  return $this->o;
+}
+//@+node:caminhante.20211024201751.1: *3* function render
+function render ($template) {
+  extract((array) $this->o);
+  /** @noinspection PhpIncludeInspection */
+  include $template;
+}
+//@+node:caminhante.20211024201755.1: *3* function validate
+/**
+ * Validate an object using Validator::validate
+ * @param Array $errors Variable to return any found errors in, optional reference.
+ * @return bool Whether the object is valid according to its annootations
+ */
+function validate (&$errors = NULL) {
+  if (!class_exists("\\O\\Validator")) include("Validator.php");
+  $errors = Validator::validate($this->raw());
+  return empty($errors);
+}
+//@+node:caminhante.20211024201823.1: *3* IteratorAggregate
+//@+node:caminhante.20211024201813.1: *4* function getIterator
+/** @return \ArrayIterator */
+function getIterator () {
+  $o = new \ArrayObject($this->o);
+  return $o->getIterator();
+}
+//@+node:caminhante.20211024201918.1: *3* ArrayAccess
+//@+node:caminhante.20211024201922.1: *4* function offsetExists
+function offsetExists ($offset) {
+  return isset($this->o[$offset]);
+}
+//@+node:caminhante.20211024201942.1: *4* function offsetGet
+function offsetGet ($offset) {
+  return $this->o[$offset];
+}
+//@+node:caminhante.20211024201943.1: *4* function offsetSet
+function offsetSet ($offset, $value) {
+  $this->o[$offset] = $value;
+}
+//@+node:caminhante.20211024201945.1: *4* function offsetUnset
+function offsetUnset ($offset) {
+  unset($this->o[$offset]);
+}
+//@-others
 }
 //@+node:caminhante.20211024202304.1: ** function o
 /**

@@ -3,7 +3,6 @@
 //@+node:caminhante.20211024200632.1: * @file Validator.php
 //@@first
 namespace O;
-//@@language php
 //@+others
 //@+node:caminhante.20211024202712.1: ** /includes
 if (!class_exists("\\O\\StringClass")) include("StringClass.php");
@@ -15,173 +14,173 @@ if (!class_exists("\\O\\ReflectionClass")) include("ReflectionClass.php");
  * Usage: O\Validator::validate($obj)
  */
 class Validator {
-  private static $constraints = array();
-  //@+others
-  //@+node:caminhante.20211024203350.1: *3* static function getAnnotations
-  /**
-   * @var string $doc comment of a parameter or property
-   * @return array
-   */
-  static function getAnnotations ($doc) {
-    $matches = array();
-    s($doc)->preg_match_all("/\@([\\w]+)(?:\(([^)]+)\))?/", $matches, PREG_SET_ORDER);
-    $annotations = array();
-    foreach($matches as $match) {
-      if (!s($match[1])->in_array(array("var", "param"))) {
-        if (count($match) == 2) {
-          $annotations[$match[1]] = TRUE;
-        } else if (count($match) == 3) {
-          // example: @Min(30)
-          if (s($match[2])->pos("=") === FALSE) {
-            $annotations[$match[1]] = trim($match[2]);
-          } else {
-            // example: @Size(min=10, max=30)
-            $variables = array();
-            $pairs = s($match[2])->explode(",");
-            foreach ($pairs as $pair) {
-              $parts = s($pair)->explode("=");
-              if (count($parts) == 2) { $variables[trim($parts[0])] = trim($parts[1]); }
+private static $constraints = array();
+//@+others
+//@+node:caminhante.20211024203350.1: *3* static function getAnnotations
+/**
+ * @var string $doc comment of a parameter or property
+ * @return array
+ */
+static function getAnnotations ($doc) {
+  $matches = array();
+  s($doc)->preg_match_all("/\@([\\w]+)(?:\(([^)]+)\))?/", $matches, PREG_SET_ORDER);
+  $annotations = array();
+  foreach($matches as $match) {
+    if (!s($match[1])->in_array(array("var", "param"))) {
+      if (count($match) == 2) {
+        $annotations[$match[1]] = TRUE;
+      } else if (count($match) == 3) {
+        // example: @Min(30)
+        if (s($match[2])->pos("=") === FALSE) {
+          $annotations[$match[1]] = trim($match[2]);
+        } else {
+          // example: @Size(min=10, max=30)
+          $variables = array();
+          $pairs = s($match[2])->explode(",");
+          foreach ($pairs as $pair) {
+            $parts = s($pair)->explode("=");
+            if (count($parts) == 2) { $variables[trim($parts[0])] = trim($parts[1]); }
+          }
+          if (count($variables) > 0) { $annotations[$match[1]] = $variables; }
+        }
+      }
+    }
+  }
+  return $annotations;
+}
+//@+node:caminhante.20211024203531.1: *3* static function validateValue
+/**
+ * Validate a property value according to the rules on its comment
+ *
+ * Note: for array types (e.g. int[]) the validation is applied to each element,
+ * but only if it cannot be applied to the array as a whole. For example,
+ * @Min can be used on an int[] to validate each element,
+ * but @Size cannot be used on a string[] except to validate the array's size.
+ * @Valid will validate an object property recursively,
+ * or validate each element in an object[].
+ *
+ * @param string|\O\ReflectionClass $class
+ * @param string|\O\ReflectionProperty $property
+ * @param mixed $value
+ * @return \O\ConstraintViolation[]
+ */
+static function validateValue ($class, $property, $value) {
+  $result = array();
+  if (is_string($property)) {
+    $class = new ReflectionClass($class);
+    $property = $class->getProperty($property);
+  }
+  $converted = convertType($value, $property->getType());
+  if ((gettype($converted) != gettype($value)) || ($converted != $value)) {
+    $result[] = new ConstraintViolation("Property type mismatch", "type", NULL, $property->getName(), $value);
+  }
+  $constraints = self::getAnnotations($property->getDocComment(TRUE));
+  foreach ($constraints as $constraint => $param) {
+    if ($constraint == "Valid") {
+      // recursive validation
+      if (is_object($value)) {
+        $violations = self::validate($value);
+        foreach ($violations as $violation) {
+          $violation->propertyPath = $property->getName() . "." . $violation->propertyPath;
+          $result[] = $violation;
+        }
+      } else if (is_array($value)) {
+        foreach ($value as $i => $item) {
+          if (is_object($item)) {
+            $violations = self::validate($item);
+            foreach ($violations as $violation) {
+              $violation->propertyPath = $property->getName() . "[$i]." . $violation->propertyPath;
+              $result[] = $violation;
             }
-            if (count($variables) > 0) { $annotations[$match[1]] = $variables; }
           }
         }
       }
-    }
-    return $annotations;
-  }
-  //@+node:caminhante.20211024203531.1: *3* static function validateValue
-  /**
-   * Validate a property value according to the rules on its comment
-   *
-   * Note: for array types (e.g. int[]) the validation is applied to each element,
-   * but only if it cannot be applied to the array as a whole. For example,
-   * @Min can be used on an int[] to validate each element,
-   * but @Size cannot be used on a string[] except to validate the array's size.
-   * @Valid will validate an object property recursively,
-   * or validate each element in an object[].
-   *
-   * @param string|\O\ReflectionClass $class
-   * @param string|\O\ReflectionProperty $property
-   * @param mixed $value
-   * @return \O\ConstraintViolation[]
-   */
-  static function validateValue ($class, $property, $value) {
-    $result = array();
-    if (is_string($property)) {
-      $class = new ReflectionClass($class);
-      $property = $class->getProperty($property);
-    }
-    $converted = convertType($value, $property->getType());
-    if ((gettype($converted) != gettype($value)) || ($converted != $value)) {
-      $result[] = new ConstraintViolation("Property type mismatch", "type", NULL, $property->getName(), $value);
-    }
-    $constraints = self::getAnnotations($property->getDocComment(TRUE));
-    foreach ($constraints as $constraint => $param) {
-      if ($constraint == "Valid") {
-        // recursive validation
-        if (is_object($value)) {
-          $violations = self::validate($value);
-          foreach ($violations as $violation) {
-            $violation->propertyPath = $property->getName() . "." . $violation->propertyPath;
-            $result[] = $violation;
-          }
-        } else if (is_array($value)) {
-          foreach ($value as $i => $item) {
-            if (is_object($item)) {
-              $violations = self::validate($item);
-              foreach ($violations as $violation) {
-                $violation->propertyPath = $property->getName() . "[$i]." . $violation->propertyPath;
-                $result[] = $violation;
-              }
-            }
-          }
-        }
-      } else {
-        $fn = self::$constraints[$constraint];
-        if (function_exists($fn)) {
-          if (!call_user_func($fn, $value, $param)) {
-            $msg = $constraint." constraint violated";
-            if (function_exists($fn."_Message")) { $msg = call_user_func($fn."_Message", $param); }
-            $result[] = new ConstraintViolation($msg, $constraint, NULL, $property->getName(), $value);
-          }
+    } else {
+      $fn = self::$constraints[$constraint];
+      if (function_exists($fn)) {
+        if (!call_user_func($fn, $value, $param)) {
+          $msg = $constraint." constraint violated";
+          if (function_exists($fn."_Message")) { $msg = call_user_func($fn."_Message", $param); }
+          $result[] = new ConstraintViolation($msg, $constraint, NULL, $property->getName(), $value);
         }
       }
     }
-    return $result;
   }
-  //@+node:caminhante.20211024204135.1: *3* static function validateProperty
-  /**
-   * @var mixed $object
-   * @var string|\O\ReflectionProperty $property
-   * @return \O\ConstraintViolation[]
-   */
-  static function validateProperty ($object, $property) {
-    $result = array();
-    if (is_string($property)) {
-      $class = new ReflectionClass($object);
-      $property = $class->getProperty($property);
-    }
-    if (is_a($property, "ReflectionProperty") && $property->isPublic()) {
-      $propertyName = $property->getName();
-      $value = $object->$propertyName;
-      $result = self::validateValue($property->getDeclaringClass(), $property, $value);
-      foreach ($result as &$violation) {
-        $violation->rootObject = $object;
-      }
-    }
-    return $result;
-  }
-  //@+node:caminhante.20211024204152.1: *3* static function validate
-  /**
-   * @var mixed $object
-   * @return \O\ConstraintViolation[]
-   */
-  static function validate ($object) {
-    $result = array();
+  return $result;
+}
+//@+node:caminhante.20211024204135.1: *3* static function validateProperty
+/**
+ * @var mixed $object
+ * @var string|\O\ReflectionProperty $property
+ * @return \O\ConstraintViolation[]
+ */
+static function validateProperty ($object, $property) {
+  $result = array();
+  if (is_string($property)) {
     $class = new ReflectionClass($object);
-    foreach ($class->getProperties() as $property) {
-      $propertyResult = self::validateProperty($object, $property);
-      $result = array_merge($result, $propertyResult);
-    };
-    return $result;
+    $property = $class->getProperty($property);
   }
-  //@+node:caminhante.20211024204210.1: *3* static function addConstraint
-  static function addConstraint ($name, $constraintFn) {
-    self::$constraints[$name] = $constraintFn;
+  if (is_a($property, "ReflectionProperty") && $property->isPublic()) {
+    $propertyName = $property->getName();
+    $value = $object->$propertyName;
+    $result = self::validateValue($property->getDeclaringClass(), $property, $value);
+    foreach ($result as &$violation) {
+      $violation->rootObject = $object;
+    }
   }
-  //@-others
+  return $result;
+}
+//@+node:caminhante.20211024204152.1: *3* static function validate
+/**
+ * @var mixed $object
+ * @return \O\ConstraintViolation[]
+ */
+static function validate ($object) {
+  $result = array();
+  $class = new ReflectionClass($object);
+  foreach ($class->getProperties() as $property) {
+    $propertyResult = self::validateProperty($object, $property);
+    $result = array_merge($result, $propertyResult);
+  };
+  return $result;
+}
+//@+node:caminhante.20211024204210.1: *3* static function addConstraint
+static function addConstraint ($name, $constraintFn) {
+  self::$constraints[$name] = $constraintFn;
+}
+//@-others
 }
 //@+node:caminhante.20211024202737.1: ** class ConstraintViolation
 class ConstraintViolation {
-  /**
-   * A human-readable description of the message
-   */
-  public $message = "";
-  /**
-   * The constraint that failed validation (e.g. "NotNull")
-   */
-  public $constraint = "";
-  /**
-   * The object whose properties are being validated.
-   * For method parameters this is the ReflectionParameter instance.
-   */
-  public $rootObject = NULL;
-  /**
-   * The property path relative to the validated object.
-   * For example "employee.firstName"
-   */
-  public $propertyPath = NULL;
-  /**
-   * The value on which validation failed
-   */
-  public $invalidValue = NULL;
-  public function __construct ($message, $constraint, $rootObject, $propertyPath, $invalidValue) {
-    $this->message = $message;
-    $this->constraint = $constraint;
-    $this->rootObject = $rootObject;
-    $this->propertyPath = $propertyPath;
-    $this->invalidValue = $invalidValue;
-  }
+/**
+ * A human-readable description of the message
+ */
+public $message = "";
+/**
+ * The constraint that failed validation (e.g. "NotNull")
+ */
+public $constraint = "";
+/**
+ * The object whose properties are being validated.
+ * For method parameters this is the ReflectionParameter instance.
+ */
+public $rootObject = NULL;
+/**
+ * The property path relative to the validated object.
+ * For example "employee.firstName"
+ */
+public $propertyPath = NULL;
+/**
+ * The value on which validation failed
+ */
+public $invalidValue = NULL;
+public function __construct ($message, $constraint, $rootObject, $propertyPath, $invalidValue) {
+  $this->message = $message;
+  $this->constraint = $constraint;
+  $this->rootObject = $rootObject;
+  $this->propertyPath = $propertyPath;
+  $this->invalidValue = $invalidValue;
+}
 }
 //@+node:caminhante.20211024202751.1: ** /constraints
 // TODO: remaining validator: @Pattern(regex=value,flag=value)
