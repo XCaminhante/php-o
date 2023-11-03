@@ -44,7 +44,7 @@ function session_start () {
 };
 // obtain the anti-CSRF token
 function get_csrf_token () {
-  if (!session_id()) session_start();
+  if (!session_id()) { session_start(); }
   return $_SESSION["__O_ANTI_CSRF_TOKEN"];
 };
 #@+node:caminhante.20231020172644.1: ** function is_csrf_protected
@@ -60,7 +60,7 @@ class Session {
 #@+others
 #@+node:caminhante.20231020172717.1: *3* function __construct
 function __construct () {
-  if (!session_id()) session_start();
+  if (!session_id()) { session_start(); }
 }
 #@+node:caminhante.20231020172721.1: *3* function getCSRFToken
 function getCSRFToken () {
@@ -70,7 +70,7 @@ function getCSRFToken () {
 function isCSRFProtected ($token = "") {
   return is_csrf_protected($token);
 }
-#@+node:caminhante.20231020172727.1: *3* function function __get
+#@+node:caminhante.20231020172727.1: *3* function __get
 function &__get ($prop) {
   if (isset($_SESSION[$prop])) {
     return $_SESSION[$prop];

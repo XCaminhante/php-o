@@ -8,10 +8,6 @@ To start using it, include this at the top of your page:
 
     <?php namespace O; include "O.php";
 
-You can use composer to install "xcaminhante/o", and then load it like this:
-
-    <?php namespace O; include "vendor/autoload.php"; O::init();
-
 It is also possible to load each of the pieces described below separately:
 
     include("path/to/O/StringClass.php");
@@ -234,7 +230,6 @@ The supported annotations are these:
 - **@Null**: can be used to override an @NotNull in a subclass.
 - **@NotNull**: property does not accept NULL as a value. If you do not specify this, NULL is a valid value (even if it fails other validation rules).
 - **@NotEmpty**: Same as @NotNull, and also string cannot be "", or whitespace and array must have at least one item.
-- **@Valid**: recursively validate this property (for object properties with a type annotation)
 - **@AssertTrue**
 - **@AssertFalse**
 - **@Min(value)**: property must be >= the value
@@ -243,8 +238,10 @@ The supported annotations are these:
 - **@DecimalMin(value)**: same as @Min, but can deal with large numbers
 - **@DecimalMax(value)**: same as @Max, but can deal with large numbers
 - **@Digits(integer=value,fraction=value)**: the specified number must have at most this many integer or fractional digits
+- **@Pattern(regex=value)**: string must match the regex
 - **@Past**: date must be in the past (supports DateTime instances, date strings and integer timestamps)
 - **@Future**: date must be in the future
+- **@Valid**: recursively validate this property (for object properties with a type annotation)
 
 The Validator is a pluggable framework. You can easily add your own annotations. Look at the O source code to see how.
 
