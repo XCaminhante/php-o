@@ -96,7 +96,7 @@ public function getType (): ?\ReflectionType {
   $matches = array();
   $pattern = "/\@var[\\s]+([\\S]+)/";
   if (s($doc)->preg_match($pattern, $matches)) {
-    return $matches[1];
+    return new ReflectionType($matches[1]);
   } else {
     return NULL;
   }
@@ -165,6 +165,17 @@ public function getDeclaringFunction (): \ReflectionFunctionAbstract {
     return $f;
   }
 }
+#@-others
+}
+#@+node:caminhante.20231103175004.1: ** class ReflectionType
+class ReflectionType extends \ReflectionType {
+#@+others
+#@+node:caminhante.20231103175229.1: *3* __construct
+function __construct (private string $___name) {}
+#@+node:caminhante.20231103175232.1: *3* function allowsNull
+public function allowsNull (): bool { return true; }
+#@+node:caminhante.20231103175233.1: *3* function __toString
+public function __toString (): string { return $this->___name; }
 #@-others
 }
 #@-others
