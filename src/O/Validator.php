@@ -1,22 +1,22 @@
-<?php
-//@+leo-ver=5-thin
-//@+node:caminhante.20211024200632.1: * @file Validator.php
-//@@first
-namespace O;
-//@+others
-//@+node:caminhante.20211024202712.1: ** /includes
-if (!class_exists("\\O\\StringClass")) include("StringClass.php");
-if (!class_exists("\\O\\ObjectClass")) include("ObjectClass.php");
-if (!class_exists("\\O\\ReflectionClass")) include("ReflectionClass.php");
-//@+node:caminhante.20211024202724.1: ** class Validator
+<?php namespace O;
+#@+leo-ver=5-thin
+#@+node:caminhante.20211024200632.1: * @file Validator.php
+#@@first
+#@@language plain
+#@+others
+#@+node:caminhante.20211024202712.1: ** /includes
+if (!class_exists("\\O\\StringClass")) { include("StringClass.php"); }
+if (!class_exists("\\O\\ObjectClass")) { include("ObjectClass.php"); }
+if (!class_exists("\\O\\ReflectionClass")) { include("ReflectionClass.php"); }
+#@+node:caminhante.20211024202724.1: ** class Validator
 /**
  * PHP implementation of JSR-303 (object validation via annotation)
  * Usage: O\Validator::validate($obj)
  */
 class Validator {
 private static $constraints = array();
-//@+others
-//@+node:caminhante.20211024203350.1: *3* static function getAnnotations
+#@+others
+#@+node:caminhante.20211024203350.1: *3* static function getAnnotations
 /**
  * @var string $doc comment of a parameter or property
  * @return array
@@ -48,7 +48,7 @@ static function getAnnotations ($doc) {
   }
   return $annotations;
 }
-//@+node:caminhante.20211024203531.1: *3* static function validateValue
+#@+node:caminhante.20211024203531.1: *3* static function validateValue
 /**
  * Validate a property value according to the rules on its comment
  *
@@ -108,7 +108,7 @@ static function validateValue ($class, $property, $value) {
   }
   return $result;
 }
-//@+node:caminhante.20211024204135.1: *3* static function validateProperty
+#@+node:caminhante.20211024204135.1: *3* static function validateProperty
 /**
  * @var mixed $object
  * @var string|\O\ReflectionProperty $property
@@ -130,7 +130,7 @@ static function validateProperty ($object, $property) {
   }
   return $result;
 }
-//@+node:caminhante.20211024204152.1: *3* static function validate
+#@+node:caminhante.20211024204152.1: *3* static function validate
 /**
  * @var mixed $object
  * @return \O\ConstraintViolation[]
@@ -144,13 +144,13 @@ static function validate ($object) {
   };
   return $result;
 }
-//@+node:caminhante.20211024204210.1: *3* static function addConstraint
+#@+node:caminhante.20211024204210.1: *3* static function addConstraint
 static function addConstraint ($name, $constraintFn) {
   self::$constraints[$name] = $constraintFn;
 }
-//@-others
+#@-others
 }
-//@+node:caminhante.20211024202737.1: ** class ConstraintViolation
+#@+node:caminhante.20211024202737.1: ** class ConstraintViolation
 class ConstraintViolation {
 /**
  * A human-readable description of the message
@@ -180,19 +180,18 @@ public function __construct ($message, $constraint, $rootObject, $propertyPath, 
   $this->rootObject = $rootObject;
   $this->propertyPath = $propertyPath;
   $this->invalidValue = $invalidValue;
-}
-}
-//@+node:caminhante.20211024202751.1: ** /constraints
+}}
+#@+node:caminhante.20211024202751.1: ** /constraints
 // TODO: remaining validator: @Pattern(regex=value,flag=value)
-//@+node:caminhante.20211024202757.1: *3* @Null
+#@+node:caminhante.20211024202757.1: *3* @Null
 function validate_Null ($value) { return $value === NULL; }
 Validator::addConstraint ("Null", "O\\validate_Null");
 function validate_Null_Message () { return "Must be null"; }
-//@+node:caminhante.20211024202814.1: *3* @NotNull
+#@+node:caminhante.20211024202814.1: *3* @NotNull
 function validate_NotNull ($value) { return $value !== NULL; }
 Validator::addConstraint ("NotNull", "O\\validate_NotNull");
 function validate_NotNull_Message () { return "Cannot be null"; }
-//@+node:caminhante.20211024202833.1: *3* @NotEmpty
+#@+node:caminhante.20211024202833.1: *3* @NotEmpty
 function validate_NotEmpty ($value) {
   if ($value === NULL) return FALSE;
   if (is_array($value)) {
@@ -203,15 +202,15 @@ function validate_NotEmpty ($value) {
 }
 Validator::addConstraint("NotEmpty", "O\\validate_NotEmpty");
 function validate_NotEmpty_Message () { return "Cannot be empty"; }
-//@+node:caminhante.20211024202854.1: *3* @AssertTrue
+#@+node:caminhante.20211024202854.1: *3* @AssertTrue
 function validate_AssertTrue ($value) { return $value == TRUE; }
 Validator::addConstraint("AssertTrue", "O\\validate_AssertTrue");
 function validate_AssertTrue_Message () { return "Must be true"; }
-//@+node:caminhante.20211024202858.1: *3* @AssertFalse
+#@+node:caminhante.20211024202858.1: *3* @AssertFalse
 function validate_AssertFalse ($value) { return $value == FALSE; }
 Validator::addConstraint("AssertFalse", "O\\validate_AssertFalse");
 function valudate_AssertFalse_Message () { return "Must be false"; }
-//@+node:caminhante.20211024202902.1: *3* @Min(value)
+#@+node:caminhante.20211024202902.1: *3* @Min(value)
 function validate_Min ($value, $param) {
   if (is_array($value)) {
     foreach ($value as $item) {
@@ -224,7 +223,7 @@ function validate_Min ($value, $param) {
 }
 Validator::addConstraint("Min", "O\\validate_Min");
 function validate_Min_Message ($param) { return "Must be >= ".$param; }
-//@+node:caminhante.20211024202906.1: *3* @Max(value)
+#@+node:caminhante.20211024202906.1: *3* @Max(value)
 function validate_Max ($value, $param) {
   if (is_array($value)) {
     foreach ($value as $item) {
@@ -237,7 +236,7 @@ function validate_Max ($value, $param) {
 }
 Validator::addConstraint("Max", "O\\validate_Max");
 function validate_Max_Message ($param) { return "Must be <= ".$param; }
-//@+node:caminhante.20211024202916.1: *3* @Size(min=value,max=value)
+#@+node:caminhante.20211024202916.1: *3* @Size(min=value,max=value)
 function validate_Size ($value, $variables) {
   $min = isset($variables["min"]) ? $variables["min"] : NULL;
   $max = isset($variables["max"]) ? $variables["max"] : NULL;
@@ -256,7 +255,7 @@ function validate_Size_Message ($param) {
   $max = isset($param["max"]) ? $param["max"] : "?";
   return "Size must be between $min and $max";
 }
-//@+node:caminhante.20211024202920.1: *3* @DecimalMin(value)
+#@+node:caminhante.20211024202920.1: *3* @DecimalMin(value)
 function validate_DecimalMin ($value, $param) {
   if ($value === null) return TRUE;
   if (is_array($value)) {
@@ -278,7 +277,7 @@ function validate_DecimalMin ($value, $param) {
 }
 Validator::addConstraint("DecimalMin", "O\\validate_DecimalMin");
 function validate_DecimalMin_Message ($param) { return "Must be >= ".$param; }
-//@+node:caminhante.20211024202924.1: *3* @DecimalMax(value)
+#@+node:caminhante.20211024202924.1: *3* @DecimalMax(value)
 function validate_DecimalMax ($value, $param) {
   if ($value === null) return TRUE;
   if (is_array($value)) {
@@ -300,11 +299,11 @@ function validate_DecimalMax ($value, $param) {
 }
 Validator::addConstraint("DecimalMax", "O\\validate_DecimalMax");
 function validate_DecimalMax_Message ($param) { return "Must be <= ".$param; }
-//@+node:caminhante.20211024202929.1: *3* @Digits(integer=value,fraction=value)
+#@+node:caminhante.20211024202929.1: *3* @Digits(integer=value,fraction=value)
 function validate_Digits ($value, $variables) {
   if (is_array($value)) {
     foreach ($value as $item) {
-      if (!validate_Digits($item, $variables)) return FALSE;
+      if (!validate_Digits($item, $variables)) { return FALSE; }
     };
     return TRUE;
   } else {
@@ -323,7 +322,18 @@ function validate_Digits_Message ($param) {
   $fraction = isset($param["fraction"]) ? intval($param["fraction"]) : 0;
   return "Number must have $decimals decimals and $fraction fractional digits";
 }
-//@+node:caminhante.20211024202933.1: *3* @Past
+#@+node:caminhante.20221112193109.1: *3* @Pattern(regex=value)
+function validate_Regex ($value, $variables) {
+  if (gettype($value) != 'string') { return FALSE; }
+  if (!isset($variables['regex'])) { return FALSE; }
+  return preg_filter($variables['regex'], 'success', $value) != false;
+}
+Validator::addConstraint("Pattern", "O\\validate_Regex");
+function validate_Regex_Message ($param) {
+  $regex = isset($param["regex"]) ? $param["regex"] : "/.*/";
+  return "String must match $regex pattern";
+}
+#@+node:caminhante.20211024202933.1: *3* @Past
 function validate_Past ($value) {
   if ($value === null) return TRUE;
   if (is_array($value)) {
@@ -345,7 +355,7 @@ function validate_Past ($value) {
 }
 Validator::addConstraint("Past", "O\\validate_Past");
 function validate_Past_Message () { return "Must be in the past"; };
-//@+node:caminhante.20211024202937.1: *3* @Future
+#@+node:caminhante.20211024202937.1: *3* @Future
 function validate_Future ($value) {
   if ($value === null) return TRUE;
   if (is_array($value)) {
@@ -367,5 +377,5 @@ function validate_Future ($value) {
 }
 Validator::addConstraint("Future", "O\\validate_Future");
 function validate_Future_Message () { return "Must be in the future"; };
-//@-others
-//@-leo
+#@-others
+#@-leo

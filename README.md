@@ -2,7 +2,7 @@
 
 *O-syntax for PHP*
 
-This is an experiment in meta-programming PHP to give it a saner API. This library requires PHP 5.3 and the mbstring module.
+This is an experiment in meta-programming PHP to give it a saner API. This library requires PHP 8.1 and the mbstring module.
 
 To start using it, include this at the top of your page:
 

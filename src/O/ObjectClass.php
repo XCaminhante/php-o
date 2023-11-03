@@ -1,20 +1,20 @@
-<?php
-//@+leo-ver=5-thin
-//@+node:caminhante.20211024200632.6: * @file ObjectClass.php
-//@@first
-namespace O;
-//@+others
-//@+node:caminhante.20211024201450.1: ** /includes
+<?php namespace O;
+#@+leo-ver=5-thin
+#@+node:caminhante.20211024200632.6: * @file ObjectClass.php
+#@@first
+#@@language plain
+#@+others
+#@+node:caminhante.20211024201450.1: ** /includes
 if (!class_exists("\\O\\ReflectionClass")) { include("ReflectionClass.php"); }
 if (!class_exists("\\O\\DateTime")) { include("DateTime.php"); }
-//@+node:caminhante.20211024201520.1: ** class ObjectClass
+#@+node:caminhante.20211024201520.1: ** class ObjectClass
 /**
  * Supporting class for the o() function
  */
 class ObjectClass implements \IteratorAggregate, \ArrayAccess {
 private $o;
-//@+others
-//@+node:caminhante.20211024201604.1: *3* function __construct
+#@+others
+#@+node:caminhante.20211024201604.1: *3* function __construct
 function __construct ($o) {
   if (is_string($o)) $o = json_decode($o);
   if (is_object($o) || is_array($o)) {
@@ -23,11 +23,11 @@ function __construct ($o) {
     $this->o = NULL;
   }
 }
-//@+node:caminhante.20211024201627.1: *3* function __toString
+#@+node:caminhante.20211024201627.1: *3* function __toString
 function __toString () {
   return json_encode($this->o);
 }
-//@+node:caminhante.20211024201639.1: *3* function __call
+#@+node:caminhante.20211024201639.1: *3* function __call
 function __call ($fn, $args) {
   if (method_exists($this->o, $fn)) {
     return call_user_func_array(array($this->o, $fn), $args);
@@ -35,23 +35,23 @@ function __call ($fn, $args) {
     return call_user_func_array($this->o->$fn, $args);
   } else { return NULL; }
 }
-//@+node:caminhante.20211024201724.1: *3* function __get
+#@+node:caminhante.20211024201724.1: *3* function __get
 function __get ($prop) {
   return $this->o->$prop;
 }
-//@+node:caminhante.20211024201728.1: *3* function __set
+#@+node:caminhante.20211024201728.1: *3* function __set
 function __set ($prop, $value) {
   return $this->o->$prop = $value;
 }
-//@+node:caminhante.20211024201731.1: *3* function __isset
+#@+node:caminhante.20211024201731.1: *3* function __isset
 function __isset ($prop) {
   return isset($this->o->$prop);
 }
-//@+node:caminhante.20211024201734.1: *3* function __unset
+#@+node:caminhante.20211024201734.1: *3* function __unset
 function __unset ($prop) {
   unset($this->o->$prop);
 }
-//@+node:caminhante.20211024201738.1: *3* function cast
+#@+node:caminhante.20211024201738.1: *3* function cast
 function cast ($asType = "stdClass") {
   if ($asType == "stdClass") {
     return $this->o;
@@ -80,21 +80,21 @@ function cast ($asType = "stdClass") {
     }
   }
 }
-//@+node:caminhante.20211024201742.1: *3* function clear
+#@+node:caminhante.20211024201742.1: *3* function clear
 function clear () {
   return $this->o = new \stdClass();
 }
-//@+node:caminhante.20211024201745.1: *3* function raw
+#@+node:caminhante.20211024201745.1: *3* function raw
 function raw () {
   return $this->o;
 }
-//@+node:caminhante.20211024201751.1: *3* function render
+#@+node:caminhante.20211024201751.1: *3* function render
 function render ($template) {
   extract((array) $this->o);
   /** @noinspection PhpIncludeInspection */
   include $template;
 }
-//@+node:caminhante.20211024201755.1: *3* function validate
+#@+node:caminhante.20211024201755.1: *3* function validate
 /**
  * Validate an object using Validator::validate
  * @param Array $errors Variable to return any found errors in, optional reference.
@@ -105,33 +105,33 @@ function validate (&$errors = NULL) {
   $errors = Validator::validate($this->raw());
   return empty($errors);
 }
-//@+node:caminhante.20211024201823.1: *3* IteratorAggregate
-//@+node:caminhante.20211024201813.1: *4* function getIterator
+#@+node:caminhante.20211024201823.1: *3* IteratorAggregate
+#@+node:caminhante.20211024201813.1: *4* function getIterator
 /** @return \ArrayIterator */
-function getIterator () {
+function getIterator (): \Traversable {
   $o = new \ArrayObject($this->o);
   return $o->getIterator();
 }
-//@+node:caminhante.20211024201918.1: *3* ArrayAccess
-//@+node:caminhante.20211024201922.1: *4* function offsetExists
-function offsetExists ($offset) {
+#@+node:caminhante.20211024201918.1: *3* ArrayAccess
+#@+node:caminhante.20211024201922.1: *4* function offsetExists
+function offsetExists ($offset): bool {
   return isset($this->o[$offset]);
 }
-//@+node:caminhante.20211024201942.1: *4* function offsetGet
-function offsetGet ($offset) {
+#@+node:caminhante.20211024201942.1: *4* function offsetGet
+function offsetGet ($offset): mixed {
   return $this->o[$offset];
 }
-//@+node:caminhante.20211024201943.1: *4* function offsetSet
-function offsetSet ($offset, $value) {
+#@+node:caminhante.20211024201943.1: *4* function offsetSet
+function offsetSet ($offset, $value): void {
   $this->o[$offset] = $value;
 }
-//@+node:caminhante.20211024201945.1: *4* function offsetUnset
-function offsetUnset ($offset) {
+#@+node:caminhante.20211024201945.1: *4* function offsetUnset
+function offsetUnset ($offset): void {
   unset($this->o[$offset]);
 }
-//@-others
+#@-others
 }
-//@+node:caminhante.20211024202304.1: ** function o
+#@+node:caminhante.20211024202304.1: ** function o
 /**
  * @param mixed $p
  * @return \O\ObjectClass
@@ -140,11 +140,11 @@ function o ($p) {
   if ($p instanceof ObjectClass) { return $p; }
   else { return new ObjectClass($p); }
 }
-//@+node:caminhante.20211024202355.1: ** function convertType
+#@+node:caminhante.20211024202355.1: ** function convertType
 // supports types from phplint/phpdoc
 // http://www.icosaedro.it/phplint/phpdoc.html#types
 function convertType ($value, $type) {
-  if ($value === NULL) { return $value; }
+  if (is_null($value)) { return $value; }
   $type = s($type)->parse_type();
   if ($type->isArray) {
     if (is_array($value)) {
@@ -175,5 +175,5 @@ function convertType ($value, $type) {
   }
   return NULL;
 }
-//@-others
-//@-leo
+#@-others
+#@-leo

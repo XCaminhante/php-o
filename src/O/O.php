@@ -1,10 +1,10 @@
-<?php
-//@+leo-ver=5-thin
-//@+node:caminhante.20211024200632.7: * @file O.php
-//@@first
-namespace O;
-//@+others
-//@+node:caminhante.20211024201242.1: ** class O
+<?php namespace O;
+#@+leo-ver=5-thin
+#@+node:caminhante.20211024200632.7: * @file O.php
+#@@first
+#@@language plain
+#@+others
+#@+node:caminhante.20211024201242.1: ** class O
 class O {
 /**
  * Force O functions to get loaded
@@ -28,5 +28,5 @@ static function init () {
   // DateTime
   if (!class_exists("\\O\\DateTime")) { include($classPath."/DateTime.php"); }
 }}
-//@-others
-//@-leo
+#@-others
+#@-leo

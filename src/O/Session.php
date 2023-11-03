@@ -1,6 +1,10 @@
-<?php
-
-namespace O;
+<?php namespace O;
+#@+leo-ver=5-thin
+#@+node:caminhante.20211024200632.3: * @file Session.php
+#@@first
+#@@language plain
+#@+others
+#@+node:caminhante.20231020172633.1: ** function session_start
 
 /**
  * secure session_start function (overrides built-in)
@@ -43,6 +47,7 @@ function get_csrf_token () {
   if (!session_id()) session_start();
   return $_SESSION["__O_ANTI_CSRF_TOKEN"];
 };
+#@+node:caminhante.20231020172644.1: ** function is_csrf_protected
 // check that CSRF token was given
 function is_csrf_protected ($token = "") {
   if (empty($token) && isset($_REQUEST["csrftoken"])) {
@@ -50,38 +55,43 @@ function is_csrf_protected ($token = "") {
   };
   return $token === get_csrf_token();
 };
-
+#@+node:caminhante.20231020172653.1: ** class Session
 class Session {
-  function __construct () {
-    if (!session_id()) session_start();
-  }
-
-  function getCSRFToken () {
-    return get_csrf_token();
-  }
-
-  function isCSRFProtected ($token = "") {
-    return is_csrf_protected($token);
-  }
-
-  function &__get ($prop) {
-    if (isset($_SESSION[$prop])) {
-      return $_SESSION[$prop];
-    } else {
-      $null = NULL;
-      return $null; // must return reference to variable
-    }
-  }
-
-  function __set ($prop, $value) {
-    return $_SESSION[$prop] = $value;
-  }
-
-  function __isset ($prop) {
-    return isset($_SESSION[$prop]);
-  }
-
-  function __unset ($prop) {
-    unset($_SESSION[$prop]);
+#@+others
+#@+node:caminhante.20231020172717.1: *3* function __construct
+function __construct () {
+  if (!session_id()) session_start();
+}
+#@+node:caminhante.20231020172721.1: *3* function getCSRFToken
+function getCSRFToken () {
+  return get_csrf_token();
+}
+#@+node:caminhante.20231020172724.1: *3* function isCSRFProtected
+function isCSRFProtected ($token = "") {
+  return is_csrf_protected($token);
+}
+#@+node:caminhante.20231020172727.1: *3* function function __get
+function &__get ($prop) {
+  if (isset($_SESSION[$prop])) {
+    return $_SESSION[$prop];
+  } else {
+    $null = NULL;
+    return $null; // must return reference to variable
   }
 }
+#@+node:caminhante.20231020172731.1: *3* function __set
+function __set ($prop, $value) {
+  return $_SESSION[$prop] = $value;
+}
+#@+node:caminhante.20231020172734.1: *3* function __isset
+function __isset ($prop) {
+  return isset($_SESSION[$prop]);
+}
+#@+node:caminhante.20231020172737.1: *3* function __unset
+function __unset ($prop) {
+  unset($_SESSION[$prop]);
+}
+#@-others
+}
+#@-others
+#@-leo
