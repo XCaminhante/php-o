@@ -23,23 +23,32 @@ private static $constraints = array();
  */
 static function getAnnotations ($doc) {
   $matches = array();
-  s($doc)->preg_match_all("/\@([\\w]+)(?:\(([^)]+)\))?/", $matches, PREG_SET_ORDER);
+  s($doc)->preg_match_all(
+    "/\@([a-zA-Z]+)[\s]*(?:\(((?:(?:[\s]*[a-zA-Z]+[\s]*=)?[\s]*(?:[0-9]+|\"(?:\\\"|[^\"])*\")(?:[\s]*|,)*)*)\))?/",
+    $matches, PREG_SET_ORDER);
   $annotations = array();
   foreach($matches as $match) {
-    if (!s($match[1])->in_array(array("var", "param"))) {
+    if (! s($match[1])->in_array(array("var", "param"))) {
       if (count($match) == 2) {
         $annotations[$match[1]] = TRUE;
       } else if (count($match) == 3) {
+        $values = s(trim($match[2]));
         // example: @Min(30)
-        if (s($match[2])->pos("=") === FALSE) {
-          $annotations[$match[1]] = trim($match[2]);
+        if ($values->pos("=") == 0) {
+          if ($values[0] == '"') { $values = $values->substr(1,-1); }
+          $annotations[$match[1]] = $values;
         } else {
           // example: @Size(min=10, max=30)
           $variables = array();
-          $pairs = s($match[2])->explode(",");
+          $pairs = $values->explode(",");
           foreach ($pairs as $pair) {
             $parts = s($pair)->explode("=");
-            if (count($parts) == 2) { $variables[trim($parts[0])] = trim($parts[1]); }
+            $parts[0] = s($parts[0])->trim();
+            if (count($parts) == 2) {
+              $parts[1] = s($parts[1])->trim();
+              if ($parts[1][0] == '"') { $parts[1] = $parts[1]->substr(1,-1); }
+              $variables[ $parts[0]->raw() ] = $parts[1]; }
+            else { $variables[] = $parts[0]; }
           }
           if (count($variables) > 0) { $annotations[$match[1]] = $variables; }
         }
@@ -325,13 +334,20 @@ function validate_Digits_Message ($param) {
 #@+node:caminhante.20221112193109.1: *3* @Pattern(regex=value)
 function validate_Regex ($value, $variables) {
   if (gettype($value) != 'string') { return FALSE; }
-  if (!isset($variables['regex'])) { return FALSE; }
-  return preg_filter($variables['regex'], 'success', $value) != false;
+  $regex = "";
+  if ( is_array($variables) && isset($variables['regex']) ) { $regex = $variables['regex']; }
+  else if (gettype($variables) == 'string') { $regex = $variables; }
+  else { return FALSE; }
+  $regex = '/'.$regex.'/';
+  return preg_filter($regex, 'success', $value) != false;
 }
 Validator::addConstraint("Pattern", "O\\validate_Regex");
 function validate_Regex_Message ($param) {
-  $regex = isset($param["regex"]) ? $param["regex"] : "/.*/";
-  return "String must match $regex pattern";
+  $regex = "";
+  if ( is_array($param) && isset($param['regex']) ) { $regex = $param['regex']; }
+  else if (gettype($param) == 'string') { $regex = $param; }
+  else { $regex = ".*"; }
+  return "String must match /{$regex}/ pattern";
 }
 #@+node:caminhante.20211024202933.1: *3* @Past
 function validate_Past ($value) {
