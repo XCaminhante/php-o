@@ -317,6 +317,21 @@ function match ($regexp): ArrayClass|null {
   };
   return NULL;
 }
+#@+node:caminhante.20231104194423.1: *4* function repeat
+/**
+ * Repeats a string.
+ * @param int $times
+ * @return string|null
+ */
+function repeat (int $times): StringClass|null {
+  if ($times <= 0) { return s(""); }
+  $r = $this->s;
+  while ($times > 1) {
+    if ($times % 2 == 0) { $r .= $r; $times >>= 2; }
+    else { $r .= $this->s; $times -= 1; }
+  }
+  return s($r);
+}
 #@+node:caminhante.20221112201700.1: *4* function replace
 // replace() already implemented for PHP syntax
 #@+node:caminhante.20221112201709.1: *4* function split

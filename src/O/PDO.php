@@ -268,7 +268,7 @@ public function rollBack (): bool {
  * @param mixed $value
  * @return bool|PDO
  */
-public function setAttribute ($attribute, $value): bool {
+public function setAttribute ($attribute, $value): bool|PDO {
   $result = parent::setAttribute($attribute, $value);
   return $this->fluent ? $this : $result;
 }
@@ -406,7 +406,7 @@ $column, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL
  * @return bool|PDOStatement
  */
 public function bindParam (
-$parameter, &$variable, $data_type = PDO::PARAM_STR, $length = NULL, $driver_options = NULL
+$parameter, &$variable, $data_type = PDO::PARAM_STR, $length = 0, $driver_options = NULL
 ): bool {
   // ArrayClass, StringClass, ChainableClass
   if (is_object($variable) && method_exists($variable, "raw")) {

@@ -14,6 +14,34 @@ if (!class_exists("\\O\\DateTime")) { include("DateTime.php"); }
 class ObjectClass implements \IteratorAggregate, \ArrayAccess {
 private $o;
 #@+others
+#@+node:caminhante.20231104225648.1: *3* static function obsafe_print_r
+public static function obsafe_print_r ($var, $return = false, $html = false, $level = 0) {
+  $spaces = "";
+  $space = $html ? "&nbsp;" : " ";
+  $newline = $html ? "<br/>" : "\n";
+  $spaces = s($space)->repeat(2);
+  $tabs = $spaces->repeat($level+1);
+  if (is_array($var)) {
+    $c = count($var);
+    $title = "Array ({$c}) {";
+  } elseif (is_object($var)) {
+    $title = get_class($var)." Object {";
+  }
+  $output = $title . $newline;
+  foreach ($var as $key => $value) {
+    if (is_array($value) || is_object($value)) {
+      $level++;
+      $value = s( ObjectClass::obsafe_print_r($value, true, $html, $level) )->substr(0,-1);
+      $level--;
+    } elseif ( is_string($value) ) {
+      $value = '"' . s($value)->replace('"','\\"') . '"';
+    }
+    $output .= $tabs . "[" . $key . "] = " . $value . $newline;
+  }
+  $output .= s($spaces)->repeat($level) .  '}' . $newline;
+  if ($return) { return $output; }
+  else { echo $output; }
+}
 #@+node:caminhante.20211024201604.1: *3* function __construct
 function __construct ($o) {
   if (is_string($o)) $o = json_decode($o);
@@ -83,6 +111,10 @@ function cast ($asType = "stdClass") {
 #@+node:caminhante.20211024201742.1: *3* function clear
 function clear () {
   return $this->o = new \stdClass();
+}
+#@+node:caminhante.20231104225615.1: *3* function print_r
+function print_r ($return = false, $html = false) {
+  return ObjectClass::obsafe_print_r($this->o, $return, $html);
 }
 #@+node:caminhante.20211024201745.1: *3* function raw
 function raw () {

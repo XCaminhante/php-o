@@ -73,7 +73,7 @@ static function getAnnotations ($doc) {
  * @param mixed $value
  * @return \O\ConstraintViolation[]
  */
-static function validateValue ($class, $property, $value) {
+static function validateValue ($class, $property, $value): ArrayClass {
   $result = array();
   if (is_string($property)) {
     $class = new ReflectionClass($class);
@@ -115,7 +115,7 @@ static function validateValue ($class, $property, $value) {
       }
     }
   }
-  return $result;
+  return a($result);
 }
 #@+node:caminhante.20211024204135.1: *3* static function validateProperty
 /**
@@ -123,7 +123,7 @@ static function validateValue ($class, $property, $value) {
  * @var string|\O\ReflectionProperty $property
  * @return \O\ConstraintViolation[]
  */
-static function validateProperty ($object, $property) {
+static function validateProperty ($object, $property): ArrayClass {
   $result = array();
   if (is_string($property)) {
     $class = new ReflectionClass($object);
@@ -137,19 +137,21 @@ static function validateProperty ($object, $property) {
       $violation->rootObject = $object;
     }
   }
-  return $result;
+  return a($result);
 }
 #@+node:caminhante.20211024204152.1: *3* static function validate
 /**
  * @var mixed $object
  * @return \O\ConstraintViolation[]
  */
-static function validate ($object) {
-  $result = array();
+static function validate ($object): ArrayClass {
+  $r = array();
+  $result = a($r);
   $class = new ReflectionClass($object);
   foreach ($class->getProperties() as $property) {
     $propertyResult = self::validateProperty($object, $property);
-    $result = array_merge($result, $propertyResult);
+    # $result = array_merge($result->raw(), $propertyResult);
+    $result = $result->merge($propertyResult);
   };
   return $result;
 }
@@ -221,6 +223,7 @@ Validator::addConstraint("AssertFalse", "O\\validate_AssertFalse");
 function valudate_AssertFalse_Message () { return "Must be false"; }
 #@+node:caminhante.20211024202902.1: *3* @Min(value)
 function validate_Min ($value, $param) {
+  $param = convertType($param, 'int');
   if (is_array($value)) {
     foreach ($value as $item) {
       if ($item < $param) return FALSE;
@@ -234,6 +237,7 @@ Validator::addConstraint("Min", "O\\validate_Min");
 function validate_Min_Message ($param) { return "Must be >= ".$param; }
 #@+node:caminhante.20211024202906.1: *3* @Max(value)
 function validate_Max ($value, $param) {
+  $param = convertType($param, 'int');
   if (is_array($value)) {
     foreach ($value as $item) {
       if ($item > $param) return FALSE;
@@ -247,16 +251,17 @@ Validator::addConstraint("Max", "O\\validate_Max");
 function validate_Max_Message ($param) { return "Must be <= ".$param; }
 #@+node:caminhante.20211024202916.1: *3* @Size(min=value,max=value)
 function validate_Size ($value, $variables) {
-  $min = isset($variables["min"]) ? $variables["min"] : NULL;
-  $max = isset($variables["max"]) ? $variables["max"] : NULL;
+  $min = isset($variables["min"]) ? convertType($variables["min"],'int') : NULL;
+  $max = isset($variables["max"]) ? convertType($variables["max"],'int') : NULL;
   $length = NULL;
   switch (gettype($value)) {
     case "array": $length = count($value); break;
     case "string": $length = s($value)->len(); break;
   };
-  return ($length === NULL) ||
-    ( (($min === NULL) || ($length >= $min)) &&
-      (($max === NULL) || ($length <= $max)) );
+  if ($length === NULL) { return FALSE; }
+  if (($min !== NULL) && ($length < $min)) { return FALSE; }
+  if (($max !== NULL) && ($length > $max)) { return FALSE; }
+  return TRUE;
 }
 Validator::addConstraint("Size", "O\\validate_Size");
 function validate_Size_Message ($param) {
@@ -336,8 +341,7 @@ function validate_Regex ($value, $variables) {
   if (gettype($value) != 'string') { return FALSE; }
   $regex = "";
   if ( is_array($variables) && isset($variables['regex']) ) { $regex = $variables['regex']; }
-  else if (gettype($variables) == 'string') { $regex = $variables; }
-  else { return FALSE; }
+  else { $regex = convertType( $variables,'string'); }
   $regex = '/'.$regex.'/';
   return preg_filter($regex, 'success', $value) != false;
 }
@@ -345,8 +349,7 @@ Validator::addConstraint("Pattern", "O\\validate_Regex");
 function validate_Regex_Message ($param) {
   $regex = "";
   if ( is_array($param) && isset($param['regex']) ) { $regex = $param['regex']; }
-  else if (gettype($param) == 'string') { $regex = $param; }
-  else { $regex = ".*"; }
+  else { $regex = convertType( $param,'string'); }
   return "String must match /{$regex}/ pattern";
 }
 #@+node:caminhante.20211024202933.1: *3* @Past

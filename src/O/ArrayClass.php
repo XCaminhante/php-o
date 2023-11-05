@@ -9,11 +9,21 @@
  * Supporting class for the a() function
  */
 class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
-private $a;
+private array $a;
 #@+others
+#@+node:caminhante.20231104205315.1: *3* static function unwrap
+public static function unwrap (array $arrayOfArrays) {
+  return a( $arrayOfArrays )
+    ->map(function ($x) {
+      if (is_a($x, "O\ArrayClass")) {$x = $x->raw();}
+      if (is_array($x)) { $x = ArrayClass::unwrap($x); }
+      return $x;
+    })->raw();
+}
 #@+node:caminhante.20220725205513.1: *3* function __construct
 function __construct (&$a) {
-  $this->a =& $a;
+  if (is_a($a,'ArrayClass')) { $this->a = $a->raw(); }
+  else { $this->a =& $a; }
 }
 #@+node:caminhante.20220725205557.1: *3* function count
 /**
@@ -81,7 +91,7 @@ function key_exists ($key) {
  * @return string|StringClass
  */
 function implode ($glue = "") {
-  return implode($this->a, $glue);
+  return s(implode($this->a, $glue));
 }
 #@+node:caminhante.20220725205701.1: *3* function keys
 /**
@@ -90,7 +100,7 @@ function implode ($glue = "") {
  * @return Array|ArrayClass
  */
 function keys () {
-  return array_keys($this->a);
+  return a(array_keys($this->a));
 }
 #@+node:caminhante.20220725205706.1: *3* function values
 /**
@@ -98,7 +108,7 @@ function keys () {
  * @return Array|ArrayClass
  */
 function values () {
-  return array_values($this->a);
+  return a(array_values($this->a));
 }
 #@+node:caminhante.20220725205711.1: *3* function pop
 /**
@@ -130,7 +140,7 @@ function push ($value1) {
  * @return Array|ArrayClass
  */
 function slice ($offset, $length = NULL, $preserve_keys = false) {
-  return array_slice($this->a, $offset, $length, $preserve_keys);
+  return a(array_slice($this->a, $offset, $length, $preserve_keys));
 }
 #@+node:caminhante.20220725205726.1: *3* function splice
 /**
@@ -142,17 +152,26 @@ function slice ($offset, $length = NULL, $preserve_keys = false) {
  */
 function splice ($offset, $length = 0, $replacement = NULL) {
   if ($replacement == NULL) $replacement = array();
-  return array_splice($this->a, $offset, $length, $replacement);
+  return a(array_splice($this->a, $offset, $length, $replacement));
 }
 #@+node:caminhante.20220725205730.1: *3* function merge
 /**
  * Merge one or more arrays
  * @param Array $array1 The first array to merge
- * @param Array $array2 The second array to merge
  * @return Array|ArrayClass
  */
-function merge ($array1, $array2) {
-  return call_user_func_array("array_merge", array_merge(array($this->a), func_get_args()));
+function merge ($array1) {
+  $args = ArrayClass::unwrap(func_get_args());
+  return a( call_user_func_array("array_merge", array_merge($this->a, $args)) );
+}
+#@+node:caminhante.20231104203124.1: *3* function concat
+/**
+ * Append array elements from the second array to this while not overwriting the elements
+ * @param array $array1
+ * @return ArrayClass
+ */
+function concat (array $array1): ArrayClass {
+  return a(array($array1) + array($this->a));
 }
 #@+node:caminhante.20220725205735.1: *3* function map
 /**
@@ -166,7 +185,7 @@ function map ($callback, $array2 = NULL) {
   $args = func_get_args();
   $params = a($args)->slice(1);
   a($params)->unshift($callback, $this->a);
-  return call_user_func_array("array_map", $params);
+  return a(call_user_func_array("array_map", $params->raw()));
 }
 #@+node:caminhante.20220725210154.1: *3* function reduce
 /**
@@ -188,7 +207,7 @@ function reduce ($callback, $initial = NULL) {
  * @return Array|ArrayClass
  */
 function filter ($callback = NULL) {
-  return array_filter($this->a, $callback);
+  return a(array_filter($this->a, $callback));
 }
 #@+node:caminhante.20220725210202.1: *3* function sum
 /**
@@ -236,7 +255,7 @@ function end () {
  * @return Array|ArrayClass
  */
 function each () {
-  return each($this->a);
+  return a(each($this->a));
 }
 #@+node:caminhante.20220725210602.1: *3* function clear
 /**
