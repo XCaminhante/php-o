@@ -158,11 +158,11 @@ function splice ($offset, $length = 0, $replacement = NULL) {
 /**
  * Merge one or more arrays
  * @param Array $array1 The first array to merge
- * @return Array|ArrayClass
+ * @return ArrayClass
  */
 function merge ($array1) {
-  $args = ArrayClass::unwrap(func_get_args());
-  return a( call_user_func_array("array_merge", array_merge($this->a, $args)) );
+  $args = call_user_func_array("array_merge", ArrayClass::unwrap(func_get_args()) );
+  return a( array_merge($this->a, $args) );
 }
 #@+node:caminhante.20231104203124.1: *3* function concat
 /**

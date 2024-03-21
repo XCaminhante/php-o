@@ -21,7 +21,7 @@ public static function obsafe_print_r ($var, $return = false, $html = false, $le
     if (is_array($v)) { $c = count($v); return "Array ({$c}) {"; }
     if (is_object($v)) { return get_class($v)." Object {"; }
     if (is_bool($v)) { return $v ? 'true' : 'false'; }
-    if (is_string($v)) { return '"' . O\s($v)->replace('"','\\"') . '"'; }
+    if (is_string($v)) { return '"' . s($v)->replace('"','\\"') . '"'; }
     if (is_float($v)) { return sprintf("%g",$v); }
     return strval($v);
   };

@@ -268,6 +268,7 @@ public function rollBack (): bool {
  * @param mixed $value
  * @return bool|PDO
  */
+#[\ReturnTypeWillChange]
 public function setAttribute ($attribute, $value): bool|PDO {
   $result = parent::setAttribute($attribute, $value);
   return $this->fluent ? $this : $result;

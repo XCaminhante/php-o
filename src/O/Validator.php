@@ -150,7 +150,6 @@ static function validate ($object): ArrayClass {
   $class = new ReflectionClass($object);
   foreach ($class->getProperties() as $property) {
     $propertyResult = self::validateProperty($object, $property);
-    # $result = array_merge($result->raw(), $propertyResult);
     $result = $result->merge($propertyResult);
   };
   return $result;
