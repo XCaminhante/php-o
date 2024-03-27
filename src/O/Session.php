@@ -5,7 +5,6 @@
 #@@language plain
 #@+others
 #@+node:caminhante.20231020172633.1: ** function session_start
-
 /**
  * secure session_start function (overrides built-in)
  */
@@ -42,6 +41,7 @@ function session_start () {
     $_SESSION["__O_ANTI_CSRF_TOKEN"] = md5(uniqid());
   };
 };
+#@+node:caminhante.20240327150533.1: ** function get_csrf_token
 // obtain the anti-CSRF token
 function get_csrf_token () {
   if (!session_id()) { session_start(); }

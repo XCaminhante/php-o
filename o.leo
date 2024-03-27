@@ -36,6 +36,7 @@
 <v t="caminhante.20211024200632.10"><vh>@file ArrayClass.php</vh></v>
 <v t="caminhante.20211024200632.9"><vh>@file ChainableClass.php</vh></v>
 <v t="caminhante.20211024200632.8"><vh>@file DateTime.php</vh></v>
+<v t="caminhante.20240327153006.1"><vh>@file FileClass.php</vh></v>
 <v t="caminhante.20211024200632.7"><vh>@file O.php</vh></v>
 <v t="caminhante.20211024200632.6"><vh>@file ObjectClass.php</vh></v>
 <v t="caminhante.20211024200632.5"><vh>@file PDO.php</vh></v>

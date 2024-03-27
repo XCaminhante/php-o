@@ -19,6 +19,8 @@ static function init () {
   if (!class_exists("\\O\\ArrayClass")) { include($classPath."/ArrayClass.php"); }
   // o()
   if (!class_exists("\\O\\ObjectClass")) { include($classPath."/ObjectClass.php"); }
+  // f()
+  if (!class_exists("\\O\\FileClass")) { include($classPath."/FileClass.php"); }
   // c()
   if (!class_exists("\\O\\ChainableClass")) { include($classPath."/ChainableClass.php"); }
   // Validator and ReflectionClass

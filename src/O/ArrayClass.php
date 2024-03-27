@@ -25,6 +25,10 @@ function __construct (&$a) {
   if (is_a($a,'ArrayClass')) { $this->a = $a->raw(); }
   else { $this->a =& $a; }
 }
+#@+node:caminhante.20240327150132.1: *3* function __toString
+function __toString () {
+  return ObjectClass::json_print($this->a);
+}
 #@+node:caminhante.20220725205557.1: *3* function count
 /**
  * Count all elements in an array
