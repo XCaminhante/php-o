@@ -42,6 +42,34 @@ public static function obsafe_print_r ($var, $return = false, $html = false, $le
   }
   if ($return) { return $output; } else { echo $output; }
 }
+#@+node:caminhante.20240321181533.1: *3* static function json_print
+public static function json_print ($var) {
+  $vts = static function ($v): string {
+    if (is_null($v)) { return 'null'; }
+    if (is_array($v) || $v instanceof \Countable) { return "["; }
+    if (is_object($v)) { return "{"; }
+    if (is_bool($v)) { return $v ? 'true' : 'false'; }
+    if (is_string($v)) { return '"' . s($v)->replace('"','\\"') . '"'; }
+    if (is_float($v)) { return sprintf("%g",$v); }
+    return strval($v);
+  };
+  $output = $vts($var);
+  if (is_array($var) || is_object($var)) {
+    foreach ($var as $key => $value) {
+      if (is_array($value) || is_object($value)) {
+        $value = json_print($value);
+      } else {
+        $value = $vts($value); }
+      if (is_array($var) || $var instanceof \Countable) {
+        $output .= $value . ',';
+      } else {
+        $output .= '"' . $key . '":' . $value . ','; }
+    }
+    $output = s($output)->preg_replace('/,$/m', '');
+    if (is_array($var) || $var instanceof \Countable) { $output .= ']'; } else { $output .= '}'; }
+  }
+  return $output;
+}
 #@+node:caminhante.20211024201604.1: *3* function __construct
 function __construct ($o) {
   if (is_string($o)) $o = json_decode($o);
@@ -53,7 +81,7 @@ function __construct ($o) {
 }
 #@+node:caminhante.20211024201627.1: *3* function __toString
 function __toString () {
-  return json_encode($this->o);
+  return ObjectClass::json_print($this->o);
 }
 #@+node:caminhante.20211024201639.1: *3* function __call
 function __call ($fn, $args) {
@@ -133,7 +161,7 @@ function render ($template) {
  * @return bool Whether the object is valid according to its annootations
  */
 function validate (&$errors = NULL) {
-  if (!class_exists("\\O\\Validator")) include("Validator.php");
+  if (!class_exists("\\O\\Validator")) { include("Validator.php"); }
   $errors = Validator::validate($this->raw());
   return empty($errors);
 }
