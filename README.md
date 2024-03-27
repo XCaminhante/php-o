@@ -6,7 +6,7 @@ This is an experiment in meta-programming PHP to give it a saner API. This libra
 
 To start using it, include this at the top of your page:
 
-    <?php namespace O; include "O.php";
+    <?php include "O.php";
 
 It is also possible to load each of the pieces described below separately:
 
@@ -23,7 +23,7 @@ It is also possible to load each of the pieces described below separately:
     * [Chainables](#chainables)
     * [Session Handling](#session-handling)
     * [PDO](#pdo)
-    * [Example Application](#example-application)
+    * [Files](#files)
 
 ## Strings and Arrays
 
@@ -108,7 +108,7 @@ Note that the last line proves that the `s()` methods are UTF-8 aware, as 0.8 me
 
 The `o()` function is used to convert an array or string to an object. A string is treated as JSON data.
 
-      $o = o('{"key":"value"}');
+      $o = O\o('{"key":"value"}');
       echo $o->key; // outputs "value"
 
 It can be used to cast objects or JSON data to a defined type:
@@ -285,12 +285,12 @@ When you do `session_start()` O guarantees the following:
 
 Some convenience functionality is provided to protect against CSRF attacks. To use this:
 
-1. Put this code in your form:  
+1. Put this code in your form:
 
       &lt;input type="hidden" name="csrftoken" value="<?php echo get_csrf_token(); ?>" />
 
 2. Put everything that processes the form inside this if:
-   
+
       if (is_csrf_protected()) { ...
 
 While it's not perfect, it should suffice as a basic level of precaution.
@@ -309,12 +309,12 @@ PDO is wrapped to improve its API.
 The fetch methods from the PDO statement are added directly to the PDO object:
 
     $db = new O\PDO("sqlite::memory:");
-    
+
     $rows = $db->fetchAll(
         "select * from test where id <> :id",
         array("id" => 2) // bound parameter by name
     );
-    
+
     $row = $db->fetchRow(
         "select * from test where id = ?",
         array(3) // bound parameter by position
@@ -395,4 +395,7 @@ You can attach a profiler to get per-query profiles:
                 [3] => Array([:id] => 6)
         )
     )
+
+## Files
+TODO: document the new FileClass and f()
 
