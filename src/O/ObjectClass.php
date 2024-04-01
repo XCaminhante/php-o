@@ -71,8 +71,8 @@ public static function json_print ($var) {
   return $output;
 }
 #@+node:caminhante.20211024201604.1: *3* function __construct
-function __construct ($o) {
-  if (is_string($o)) $o = json_decode($o);
+function __construct ($o = new \stdClass()) {
+  if (is_string($o)) { $o = json_decode($o); }
   if (is_object($o) || is_array($o)) {
     $this->o = (object) $o;
   } else {

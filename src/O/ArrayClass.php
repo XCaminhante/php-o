@@ -144,7 +144,8 @@ function push ($value1) {
  * @return Array|ArrayClass
  */
 function slice ($offset, $length = NULL, $preserve_keys = false) {
-  return a(array_slice($this->a, $offset, $length, $preserve_keys));
+  $r = array_slice($this->a, $offset, $length, $preserve_keys);
+  return a($r);
 }
 #@+node:caminhante.20220725205726.1: *3* function splice
 /**
@@ -166,7 +167,8 @@ function splice ($offset, $length = 0, $replacement = NULL) {
  */
 function merge ($array1) {
   $args = call_user_func_array("array_merge", ArrayClass::unwrap(func_get_args()) );
-  return a( array_merge($this->a, $args) );
+  $r = array_merge($this->a, $args);
+  return a($r);
 }
 #@+node:caminhante.20231104203124.1: *3* function concat
 /**
@@ -189,7 +191,8 @@ function map ($callback, $array2 = NULL) {
   $args = func_get_args();
   $params = a($args)->slice(1);
   a($params)->unshift($callback, $this->a);
-  return a(call_user_func_array("array_map", $params->raw()));
+  $r = call_user_func_array("array_map", $params->raw());
+  return a($r);
 }
 #@+node:caminhante.20220725210154.1: *3* function reduce
 /**
