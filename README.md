@@ -398,4 +398,3 @@ You can attach a profiler to get per-query profiles:
 
 ## Files
 TODO: document the new FileClass and f()
-

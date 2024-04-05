@@ -21,7 +21,7 @@ public static function unwrap (array $arrayOfArrays) {
     })->raw();
 }
 #@+node:caminhante.20220725205513.1: *3* function __construct
-function __construct (&$a) {
+function __construct (&$a = array()) {
   if (is_a($a,'ArrayClass')) { $this->a = $a->raw(); }
   else { $this->a =& $a; }
 }

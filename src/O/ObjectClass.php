@@ -57,7 +57,7 @@ public static function json_print ($var) {
   if (is_array($var) || is_object($var)) {
     foreach ($var as $key => $value) {
       if (is_array($value) || is_object($value)) {
-        $value = json_print($value);
+        $value = self::json_print($value);
       } else {
         $value = $vts($value); }
       if (is_array($var) || $var instanceof \Countable) {
@@ -76,7 +76,7 @@ function __construct ($o = new \stdClass()) {
   if (is_object($o) || is_array($o)) {
     $this->o = (object) $o;
   } else {
-    $this->o = NULL;
+    $this->o = new \stdClass();
   }
 }
 #@+node:caminhante.20211024201627.1: *3* function __toString
@@ -196,7 +196,7 @@ function offsetUnset ($offset): void {
  * @param mixed $p
  * @return \O\ObjectClass
  */
-function o ($p) {
+function o (&$p) {
   if ($p instanceof ObjectClass) { return $p; }
   else { return new ObjectClass($p); }
 }

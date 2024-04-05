@@ -356,7 +356,8 @@ protected function __construct ($pdo) {
  * @param array|object $bind
  * @return PDOStatement|bool
  */
-public function bindParams ($bind): bool|\PDOStatement {
+#[\ReturnTypeWillChange]
+public function bindParams ($bind): bool|PDOStatement {
   $success = TRUE;
   // support object with key value pairs (= named parameters)
   if (is_object($bind)) {
@@ -391,9 +392,10 @@ public function bindParams ($bind): bool|\PDOStatement {
  * @param mixed $driverdata
  * @return bool|PDOStatement
  */
+#[\ReturnTypeWillChange]
 public function bindColumn (
 $column, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL
-): bool {
+): bool|PDOStatement {
   $result = parent::bindColumn($column, $param, $type, $maxlen, $driverdata);
   return $this->pdo->isFluent() ? $this : $result;
 }
@@ -406,9 +408,10 @@ $column, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL
  * @param mixed $driver_options
  * @return bool|PDOStatement
  */
+#[\ReturnTypeWillChange]
 public function bindParam (
 $parameter, &$variable, $data_type = PDO::PARAM_STR, $length = 0, $driver_options = NULL
-): bool {
+): bool|PDOStatement {
   // ArrayClass, StringClass, ChainableClass
   if (is_object($variable) && method_exists($variable, "raw")) {
     $variable = $variable->raw();
@@ -429,7 +432,8 @@ $parameter, &$variable, $data_type = PDO::PARAM_STR, $length = 0, $driver_option
  * @param int $data_type
  * @return bool|PDOStatement
  */
-public function bindValue ($parameter, $value, $data_type = PDO::PARAM_STR): bool {
+#[\ReturnTypeWillChange]
+public function bindValue ($parameter, $value, $data_type = PDO::PARAM_STR): bool|PDOStatement {
   if ($value instanceof \DateTime) {
     $value = $value->format(PDO::$dateFormat);
   };
@@ -441,7 +445,8 @@ public function bindValue ($parameter, $value, $data_type = PDO::PARAM_STR): boo
 /**
  * @return bool|PDOStatement
  */
-public function closeCursor (): bool {
+#[\ReturnTypeWillChange]
+public function closeCursor (): bool|PDOStatement {
   $result = parent::closeCursor();
   return $this->pdo->isFluent() ? $this : $result;
 }
@@ -450,7 +455,8 @@ public function closeCursor (): bool {
  * @param array $input_parameters
  * @return bool|PDOStatement
  */
-public function execute ($input_parameters = NULL): bool {
+#[\ReturnTypeWillChange]
+public function execute ($input_parameters = NULL): bool|PDOStatement {
   if ($this->pdo->getProfiler()) {
     $id = $this->pdo->getProfiler()->queryStart(
       $this->queryString, $input_parameters ?: $this->params);
@@ -463,7 +469,8 @@ public function execute ($input_parameters = NULL): bool {
 /**
  * @return bool|PDOStatement
  */
-public function nextRowSet (): bool {
+#[\ReturnTypeWillChange]
+public function nextRowSet (): bool|PDOStatement {
   $result = parent::nextRowSet();
   return $this->pdo->isFluent() ? $this : $result;
 }
@@ -473,7 +480,8 @@ public function nextRowSet (): bool {
  * @param mixed $value
  * @return bool|PDOStatement
  */
-public function setAttribute ($attribute, $value): bool {
+#[\ReturnTypeWillChange]
+public function setAttribute ($attribute, $value): bool|PDOStatement {
   $result = parent::setAttribute($attribute, $value);
   return $this->pdo->isFluent() ? $this : $result;
 }
@@ -483,7 +491,8 @@ public function setAttribute ($attribute, $value): bool {
  * @param array $params
  * @return bool|PDOStatement
  */
-public function setFetchMode (int $mode, mixed ...$params): bool {
+#[\ReturnTypeWillChange]
+public function setFetchMode (int $mode, mixed ...$params): bool|PDOStatement {
   $result = parent::setFetchMode($mode,$params);
   return $this->pdo->isFluent() ? $this : $result;
 }
