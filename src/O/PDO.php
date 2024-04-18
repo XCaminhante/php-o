@@ -242,7 +242,8 @@ public function query (string $statement, ?int $fetchMode = null, mixed ...$fetc
 /**
  * @return bool|PDO
  */
-public function beginTransaction (): bool {
+#[\ReturnTypeWillChange]
+public function beginTransaction (): bool|PDO {
   $result = parent::beginTransaction();
   return $this->fluent ? $this : $result;
 }
@@ -250,7 +251,8 @@ public function beginTransaction (): bool {
 /**
  * @return bool|PDO
  */
-public function commit (): bool {
+#[\ReturnTypeWillChange]
+public function commit (): bool|PDO {
   $result = parent::commit();
   return $this->fluent ? $this : $result;
 }
@@ -258,7 +260,8 @@ public function commit (): bool {
 /**
  * @return bool|PDO
  */
-public function rollBack (): bool {
+#[\ReturnTypeWillChange]
+public function rollBack (): bool|PDO {
   $result = parent::rollBack();
   return $this->fluent ? $this : $result;
 }

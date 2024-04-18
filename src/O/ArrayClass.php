@@ -95,7 +95,7 @@ function key_exists ($key) {
  * @return string|StringClass
  */
 function implode ($glue = "") {
-  return s(implode($this->a, $glue));
+  return s(implode($glue, $this->a));
 }
 #@+node:caminhante.20220725205701.1: *3* function keys
 /**

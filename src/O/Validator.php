@@ -24,7 +24,7 @@ private static $constraints = array();
 static function getAnnotations ($doc) {
   $matches = array();
   s($doc)->preg_match_all(
-    "/\@([a-zA-Z]+)[\s]*(?:\(((?:(?:[\s]*[a-zA-Z]+[\s]*=)?[\s]*(?:[0-9]+|\"(?:\\\"|[^\"])*\")(?:[\s]*|,)*)*)\))?/",
+    "/@([a-zA-Z]+) (?: [\s^\n]* \( ( (?: \"[^\"]+\" | [0-9]+ | (?: [a-zA-Z0-9]+=[^,\)]+,? )+ ) ) \) )?/ux",
     $matches, PREG_SET_ORDER);
   $annotations = array();
   foreach($matches as $match) {
@@ -192,7 +192,6 @@ public function __construct ($message, $constraint, $rootObject, $propertyPath, 
   $this->invalidValue = $invalidValue;
 }}
 #@+node:caminhante.20211024202751.1: ** /constraints
-// TODO: remaining validator: @Pattern(regex=value,flag=value)
 #@+node:caminhante.20211024202757.1: *3* @Null
 function validate_Null ($value) { return $value === NULL; }
 Validator::addConstraint ("Null", "O\\validate_Null");
@@ -220,6 +219,20 @@ function validate_AssertTrue_Message () { return "Must be true"; }
 function validate_AssertFalse ($value) { return $value == FALSE; }
 Validator::addConstraint("AssertFalse", "O\\validate_AssertFalse");
 function valudate_AssertFalse_Message () { return "Must be false"; }
+#@+node:caminhante.20240418155302.1: *3* @Assert("function"), @Assert(function="function")
+function validate_Assert ($value, $param) {
+  $function = "";
+  if ( is_array($param) && isset($param['function']) ) { $function = $param['function']; }
+  else { $function = convertType($param,'string'); }
+  return call_user_func($function, $value) != false;
+}
+Validator::addConstraint("Assert", "O\\validate_Assert");
+function validate_Assert_Message ($param) {
+  $function = "";
+  if ( is_array($param) && isset($param['function']) ) { $function = $param['function']; }
+  else { $function = convertType($param,'string'); }
+  return "Value must pass by the assertion function {$function}";
+}
 #@+node:caminhante.20211024202902.1: *3* @Min(value)
 function validate_Min ($value, $param) {
   $param = convertType($param, 'int');
@@ -335,21 +348,28 @@ function validate_Digits_Message ($param) {
   $fraction = isset($param["fraction"]) ? intval($param["fraction"]) : 0;
   return "Number must have $decimals decimals and $fraction fractional digits";
 }
-#@+node:caminhante.20221112193109.1: *3* @Pattern(regex=value)
+#@+node:caminhante.20221112193109.1: *3* @Pattern("^abc|def$"), @Pattern(regex=value,flags="gux")
 function validate_Regex ($value, $variables) {
   if (gettype($value) != 'string') { return FALSE; }
   $regex = "";
-  if ( is_array($variables) && isset($variables['regex']) ) { $regex = $variables['regex']; }
-  else { $regex = convertType( $variables,'string'); }
-  $regex = '/'.$regex.'/';
-  return preg_filter($regex, 'success', $value) != false;
+  $flags = "";
+  if ( is_array($variables) ) {
+    if (isset($variables['regex'])) { $regex = $variables['regex']; }
+    if (isset($variables['flags'])) { $flags = $variables['flags']; }
+  }
+  else { $regex = convertType($variables,'string'); }
+  return preg_filter("/{$regex}/{$flags}", 'success', $value) != false;
 }
 Validator::addConstraint("Pattern", "O\\validate_Regex");
-function validate_Regex_Message ($param) {
+function validate_Regex_Message ($variables) {
   $regex = "";
-  if ( is_array($param) && isset($param['regex']) ) { $regex = $param['regex']; }
-  else { $regex = convertType( $param,'string'); }
-  return "String must match /{$regex}/ pattern";
+  $flags = "";
+  if ( is_array($variables) ) {
+    if (isset($variables['regex'])) { $regex = $variables['regex']; }
+    if (isset($variables['flags'])) { $flags = $variables['flags']; }
+  }
+  else { $regex = convertType($variables,'string'); }
+  return "String must match /{$regex}/{$flags} pattern";
 }
 #@+node:caminhante.20211024202933.1: *3* @Past
 function validate_Past ($value) {
