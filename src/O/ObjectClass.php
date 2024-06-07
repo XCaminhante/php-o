@@ -49,9 +49,9 @@ public static function json_print ($var) {
     if (is_array($v) || $v instanceof \Countable) { return "["; }
     if (is_object($v)) { return "{"; }
     if (is_bool($v)) { return $v ? 'true' : 'false'; }
-    if (is_string($v)) { return '"' . s($v)->replace('"','\\"') . '"'; }
+    if (is_string($v)) { return '"' . self::json_string($v) . '"'; }
     if (is_float($v)) { return sprintf("%g",$v); }
-    return strval($v);
+    return self::json_string(strval($v));
   };
   $output = $vts($var);
   if (is_array($var) || is_object($var)) {
@@ -69,6 +69,10 @@ public static function json_print ($var) {
     if (is_array($var) || $var instanceof \Countable) { $output .= ']'; } else { $output .= '}'; }
   }
   return $output;
+}
+#@+node:caminhante.20240607151208.1: *3* static function json_string
+private static function json_string ($s) {
+  return s($s)->replace('"','\\"')->replace('\\', '\\\\')->replace("\r", '\r')->replace("\n", '\n')->raw();
 }
 #@+node:caminhante.20211024201604.1: *3* function __construct
 function __construct ($o = new \stdClass()) {

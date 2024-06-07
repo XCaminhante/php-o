@@ -133,10 +133,10 @@ class FileClass {
   public function open ($mode) {
     if ($this->filehandle) { return false; }
     if ($this->is_directory()) {
-      $this->openmode = s("d");
+      $this->openmode = "d";
       $this->filehandle = opendir($this->filename);
     } else {
-      $this->openmode = s($mode);
+      $this->openmode = $mode;
       $this->filehandle = fopen($this->filename,$mode); }
     if (!$this->filehandle) { $this->openmode = ''; }
     return ($this->filehandle != false);
@@ -144,6 +144,10 @@ class FileClass {
   #@+node:caminhante.20240327153013.27: *4* public function open_rw ()
   public function open_rw () {
     return $this->open("c+b");
+  }
+  #@+node:caminhante.20240508152234.1: *4* public function open_rw_truncate ()
+  public function open_rw_truncate () {
+    return $this->open("w+b");
   }
   #@+node:caminhante.20240327153013.28: *4* public function close ()
   public function close () {
@@ -223,7 +227,7 @@ class FileClass {
   #@+node:caminhante.20240327153013.38: *4* public function write_all ($lines)
   public function write_all ($lines) {
     if (!$this->filehandle) { return false; }
-    if ($this->is_file()) { 
+    if ($this->is_file()) {
       ftruncate($this->filehandle, 0);
       rewind($this->filehandle);
       foreach ($lines as $line) {
