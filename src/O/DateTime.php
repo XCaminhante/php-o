@@ -14,7 +14,7 @@ class DateTime extends \DateTime implements \JsonSerializable {
  *
  * \DateTime::ISO8601 does not add the colon to the timezone offset which is required for iPhone
  */
-const ISO8601 = 'Y-m-d\TH:i:sP';
+const string ISO8601 = 'Y-m-d\\TH:i:sP'; 
 #@+node:caminhante.20220725212246.1: *3* function __toString
 /**
  * Return date in ISO8601 format
