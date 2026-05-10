@@ -16,7 +16,7 @@ class DateTime extends \DateTime implements \JsonSerializable {
  */
 const string ISO8601 = 'Y-m-d\\TH:i:sP'; 
 #@+node:caminhante.20260510141115.1: *3* function __construct
-function __construct (string|int $d) {
+function __construct (string|int &$d) {
   if (is_string($d)) { parent::__construct($d); }
   else if (is_int($d)) { parent::__construct(date(static::ISO8601, $d)); }
 }
