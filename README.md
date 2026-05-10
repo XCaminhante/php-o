@@ -129,17 +129,17 @@ The properties on the class that you are casting to can have type annotations th
 
 Supported primitive types are:
 
-- **void**: becomes NULL
+- **void**: becomes null
 - **bool**/boolean
-- **int**/integer: becomes NULL if conversion fails
-- **float**/double: becomes NULL if conversion fails
+- **int**/integer: becomes null if conversion fails
+- **float**/double: becomes null if conversion fails
 - **string**
 - **mixed**: leaves value unconverted
-- **resource**: becomes NULL if it is not a resource
+- **resource**: becomes null if it is not a resource
 - **object**: uses o() to cast to stdObject (accepts JSON string)
 - **DateTime**: converts a string or int to a DateTime instance
 
-Any piece of data that fails to convert to the right type becomes NULL. This is an easy way to force JSON input to be in the right type.
+Any piece of data that fails to convert to the right type becomes null. This is an easy way to force JSON input to be in the right type.
 
 **Tips:**
 
@@ -165,7 +165,7 @@ When you call that script with ?foo=test it will output:
         [bar] => 1
       )
 
-The `foo` parameter is taken from the $_REQUEST array, but the `bar` gets its default value instead from the type definition. If bar was specified, it would automatically get converted to an int if possible (and become NULL otherwise).
+The `foo` parameter is taken from the $_REQUEST array, but the `bar` gets its default value instead from the type definition. If bar was specified, it would automatically get converted to an int if possible (and become null otherwise).
 
 ## Input Validation
 
@@ -228,7 +228,7 @@ In short, the Validator::validate method will perform the checks as specified by
 The supported annotations are these:
 
 - **@Null**: can be used to override an @NotNull in a subclass.
-- **@NotNull**: property does not accept NULL as a value. If you do not specify this, NULL is a valid value (even if it fails other validation rules).
+- **@NotNull**: property does not accept null as a value. If you do not specify this, null is a valid value (even if it fails other validation rules).
 - **@NotEmpty**: Same as @NotNull, and also string cannot be "", or whitespace and array must have at least one item.
 - **@AssertTrue**
 - **@AssertFalse**
@@ -322,7 +322,7 @@ The fetch methods from the PDO statement are added directly to the PDO object:
 
     $col = $db->fetchColumn(
         "select description, id from test where id <> :id",
-        array("id" => 1), // NULL to skip
+        array("id" => 1), // null to skip
         1 // return second column
     );
 

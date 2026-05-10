@@ -19,28 +19,22 @@ class ChainableClass implements \IteratorAggregate, \ArrayAccess {
 private $o;
 #@+others
 #@+node:caminhante.20220725211243.1: *3* function __construct
-function __construct ($o) {
-  $this->o = $o;
+function __construct (&$o) {
+  $this->o =& $o;
 }
 #@+node:caminhante.20220725211517.1: *3* function __toString
-function __toString () {
+function __toString (): string {
   return (string) $this->o;
 }
 #@+node:caminhante.20220725211524.1: *3* static function asChainable
-private static function asChainable ($p): ChainableClass {
+private static function asChainable ($p): mixed {
   switch (gettype($p)) {
-    case "string":
-      return cs($p);
-    case "array":
-      return ca($p);
-    case "object":
-      return co($p);
+    case "string": return cs($p);
+    case "array": return ca($p);
+    case "object": return co($p);
     default:
-      if (is_object($p)) {
-        return c($p);
-      } else {
-        return $p;
-      }
+      if (is_object($p)) { return c($p); }
+      else { return $p; }
   }
 }
 #@+node:caminhante.20220725211706.1: *3* function __call
@@ -49,16 +43,14 @@ private static function asChainable ($p): ChainableClass {
  * @param array $args
  * @return mixed|\O\ChainableClass
  */
-function __call ($fn, $args): ChainableClass {
+function __call (string $fn, array $args): mixed {
   return self::asChainable(call_user_func_array(array($this->o, $fn), $args));
 }
 #@+node:caminhante.20220725211712.1: *3* function raw
 function raw (): mixed {
   if (is_object($this->o) && method_exists($this->o, "raw")) {
     return call_user_func(array($this->o, "raw"));
-  } else {
-    return $this->o;
-  }
+  } else { return $this->o; }
 }
 #@+node:caminhante.20220725211741.1: *3* Implements \IteratorAggregate
 #@+node:caminhante.20220725211746.1: *4* getIterator
@@ -68,9 +60,7 @@ function raw (): mixed {
 function getIterator (): \Traversable {
   if (method_exists($this->o, "getIterator")) {
     return call_user_func(array($this->o, "getIterator"));
-  } else {
-    return NULL;
-  }
+  } else { return null; }
 }
 #@+node:caminhante.20220725211815.1: *3* Implements \ArrayAccess
 #@+node:caminhante.20220725211837.1: *4* offsetExists
@@ -92,43 +82,36 @@ function offsetUnset ($offset): void {
 #@-others
 }
 #@+node:caminhante.20220725211214.1: ** c
-
 /**
  * @param mixed $o
  * @return \O\ChainableClass
  */
-function c ($o) {
-  if ($o instanceof ChainableClass) {
-    return $o;
-  } else {
-    return new ChainableClass($o);
-  }
+function c ($o): ChainableClass {
+  if ($o instanceof ChainableClass) { return $o; }
+  else { return new ChainableClass($o); }
 }
 #@+node:caminhante.20220725211218.1: ** cs
-
 /**
  * @param string $o
  * @return \O\ChainableClass|\O\StringClass
  */
-function cs ($o) {
+function cs (string $o): ChainableClass|StringClass {
   return c(s($o));
 }
 #@+node:caminhante.20220725211222.1: ** ca
-
 /**
  * @param array $o
  * @return \O\ChainableClass|\O\ArrayClass
  */
-function ca ($o) {
+function ca (array $o): ChainableClass|ArrayClass {
   return c(a($o));
 }
 #@+node:caminhante.20220725211224.1: ** co
-
 /**
  * @param mixed $o
  * @return \O\ChainableClass|\O\ObjectClass
  */
-function co ($o) {
+function co ($o): ChainableClass|ObjectClass {
   return c(o($o));
 }
 #@-others

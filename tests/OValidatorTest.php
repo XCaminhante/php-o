@@ -27,7 +27,7 @@ public function testAnnotations() {
 }
 #@+node:caminhante.20230724211549.1: *3* testNull
 public function testNull() {
-  $result = O\Validator::validateValue("ValidationTest_Null", "test", NULL);
+  $result = O\Validator::validateValue("ValidationTest_Null", "test", null);
   $this->assertEquals("array", gettype($result));
   $this->assertEquals(0, count($result));
   $result = O\Validator::validateValue("ValidationTest_Null", "test", "notnull");
@@ -41,7 +41,7 @@ public function testNotNull() {
   $result = O\Validator::validateProperty($obj, "test");
   $this->assertEquals("array", gettype($result));
   $this->assertEquals(0, count($result));
-  $obj->test = NULL;
+  $obj->test = null;
   $result = O\Validator::validateProperty($obj, "test");
   $this->assertEquals("array", gettype($result));
   $this->assertEquals(1, count($result));
@@ -101,7 +101,7 @@ function testValid() {
   $obj2->test = "foo";
   $obj->test = $obj2;
   $this->assertEquals(0, count(O\Validator::validate($obj)));
-  $obj2->test = NULL;
+  $obj2->test = null;
   $this->assertEquals(1, count(O\Validator::validate($obj)));
 }
 #@+node:caminhante.20230724211643.1: *3* testArrayValid
@@ -110,7 +110,7 @@ function testArrayValid() {
   $obj->test = new ValidationTest_NotNull();
   $obj->test->test = "foo";
   $this->assertEquals(0, count(O\Validator::validate($obj)));
-  $obj->arrayVal = NULL;
+  $obj->arrayVal = null;
   $this->assertEquals(1, count(O\Validator::validate($obj)));
   $obj->arrayVal = array(new ValidationTest_NotNull());
   $this->assertEquals(1, count(O\Validator::validate($obj)));

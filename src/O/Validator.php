@@ -81,7 +81,7 @@ static function validateValue ($class, $property, $value): ArrayClass {
   }
   $converted = convertType($value, $property->getType());
   if ((gettype($converted) != gettype($value)) || ($converted != $value)) {
-    $result[] = new ConstraintViolation("Property type mismatch", "type", NULL, $property->getName(), $value);
+    $result[] = new ConstraintViolation("Property type mismatch", "type", null, $property->getName(), $value);
   }
   $constraints = self::getAnnotations($property->getDocComment(TRUE));
   foreach ($constraints as $constraint => $param) {
@@ -110,7 +110,7 @@ static function validateValue ($class, $property, $value): ArrayClass {
         if (!call_user_func($fn, $value, $param)) {
           $msg = $constraint." constraint violated";
           if (function_exists($fn."_Message")) { $msg = call_user_func($fn."_Message", $param); }
-          $result[] = new ConstraintViolation($msg, $constraint, NULL, $property->getName(), $value);
+          $result[] = new ConstraintViolation($msg, $constraint, null, $property->getName(), $value);
         }
       }
     }
@@ -174,16 +174,16 @@ public $constraint = "";
  * The object whose properties are being validated.
  * For method parameters this is the ReflectionParameter instance.
  */
-public $rootObject = NULL;
+public $rootObject = null;
 /**
  * The property path relative to the validated object.
  * For example "employee.firstName"
  */
-public $propertyPath = NULL;
+public $propertyPath = null;
 /**
  * The value on which validation failed
  */
-public $invalidValue = NULL;
+public $invalidValue = null;
 public function __construct ($message, $constraint, $rootObject, $propertyPath, $invalidValue) {
   $this->message = $message;
   $this->constraint = $constraint;
@@ -193,16 +193,16 @@ public function __construct ($message, $constraint, $rootObject, $propertyPath, 
 }}
 #@+node:caminhante.20211024202751.1: ** /constraints
 #@+node:caminhante.20211024202757.1: *3* @Null
-function validate_Null ($value) { return $value === NULL; }
+function validate_Null ($value) { return $value === null; }
 Validator::addConstraint ("Null", "O\\validate_Null");
 function validate_Null_Message () { return "Must be null"; }
 #@+node:caminhante.20211024202814.1: *3* @NotNull
-function validate_NotNull ($value) { return $value !== NULL; }
+function validate_NotNull ($value) { return $value !== null; }
 Validator::addConstraint ("NotNull", "O\\validate_NotNull");
 function validate_NotNull_Message () { return "Cannot be null"; }
 #@+node:caminhante.20211024202833.1: *3* @NotEmpty
 function validate_NotEmpty ($value) {
-  if ($value === NULL) return FALSE;
+  if ($value === null) return FALSE;
   if (is_array($value)) {
     return count($value) > 0;
   } else {
@@ -263,16 +263,16 @@ Validator::addConstraint("Max", "O\\validate_Max");
 function validate_Max_Message ($param) { return "Must be <= ".$param; }
 #@+node:caminhante.20211024202916.1: *3* @Size(min=value,max=value)
 function validate_Size ($value, $variables) {
-  $min = isset($variables["min"]) ? convertType($variables["min"],'int') : NULL;
-  $max = isset($variables["max"]) ? convertType($variables["max"],'int') : NULL;
-  $length = NULL;
+  $min = isset($variables["min"]) ? convertType($variables["min"],'int') : null;
+  $max = isset($variables["max"]) ? convertType($variables["max"],'int') : null;
+  $length = null;
   switch (gettype($value)) {
     case "array": $length = count($value); break;
     case "string": $length = s($value)->len(); break;
   };
-  if ($length === NULL) { return FALSE; }
-  if (($min !== NULL) && ($length < $min)) { return FALSE; }
-  if (($max !== NULL) && ($length > $max)) { return FALSE; }
+  if ($length === null) { return FALSE; }
+  if (($min !== null) && ($length < $min)) { return FALSE; }
+  if (($max !== null) && ($length > $max)) { return FALSE; }
   return TRUE;
 }
 Validator::addConstraint("Size", "O\\validate_Size");

@@ -11,9 +11,9 @@ class OPDOMySQLTest extends PHPUnit_Framework_TestCase {
 #@+others
 #@+node:caminhante.20230724205641.1: *3* /vars
 /** @var \O\PDO */
-static protected $db = NULL;
+static protected $db = null;
 /** @var string */
-static protected $dbError = NULL;
+static protected $dbError = null;
 #@+node:caminhante.20230724205654.1: *3* setUp
 protected function setUp() {
   // mysql connection parameters
@@ -26,14 +26,14 @@ protected function setUp() {
       'The PDO mysql extension is not available.'
     );
   }
-  if (self::$dbError === NULL) {
+  if (self::$dbError === null) {
     try {
       self::$db = new O\PDO($dsn, $username, $password);
     } catch (Exception $e) {
       self::$dbError = $e->getMessage();
     };
   };
-  if (self::$dbError !== NULL) {
+  if (self::$dbError !== null) {
     $this->markTestSkipped("Unable to connect to mysql: ".self::$dbError);
   };
   self::$db->exec("DROP TABLE IF EXISTS test");

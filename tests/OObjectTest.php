@@ -90,7 +90,7 @@ public function testConvertDateTime() {
   $this->assertTrue(is_object($obj));
   $this->assertTrue(is_subclass_of($obj->var1, "DateTime"));
   $this->assertEquals($strISODate, $obj->var1->format('Y-m-d\TH:i:sP'));
-  $obj = O\o(array("var1" => NULL))->cast("ObjectTest4");
+  $obj = O\o(array("var1" => null))->cast("ObjectTest4");
   $this->assertTrue(is_object($obj));
   $this->assertNull($obj->var1);
 }

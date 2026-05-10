@@ -12,12 +12,12 @@ if (!class_exists("\\O\\StringClass")) { include("StringClass.php"); }
  */
 class ReflectionClass extends \ReflectionClass {
 #@+others
-#@+node:caminhante.20230706214157.1: *3* public function getMethods ($filter = NULL)
+#@+node:caminhante.20230706214157.1: *3* public function getMethods ($filter = null)
 /**
  * @param int $filter
  * @return \O\ReflectionMethod[]
  */
-public function getMethods ($filter = NULL): array {
+public function getMethods ($filter = null): array {
   $methods = parent::getMethods($filter);
   foreach ($methods as $index => $method) {
     $methods[$index] = new ReflectionMethod(
@@ -33,13 +33,13 @@ public function getMethods ($filter = NULL): array {
 public function getMethod ($name): \ReflectionMethod {
   return new ReflectionMethod($this->getName(), $name);
 }
-#@+node:caminhante.20230706214220.1: *3* public function getProperties ($filter = NULL)
+#@+node:caminhante.20230706214220.1: *3* public function getProperties ($filter = null)
 /**
  * @param int $filter
  * @return \O\ReflectionProperty[]
  */
-public function getProperties ($filter = NULL): array {
-  if ($filter === NULL) {
+public function getProperties ($filter = null): array {
+  if ($filter === null) {
     $filter =
       ReflectionProperty::IS_STATIC |
         ReflectionProperty::IS_PUBLIC |
@@ -98,7 +98,7 @@ public function getType (): ?\ReflectionType {
   if (s($doc)->preg_match($pattern, $matches)) {
     return new ReflectionType($matches[1]);
   } else {
-    return NULL;
+    return null;
   }
 }
 #@-others

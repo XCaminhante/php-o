@@ -75,7 +75,7 @@ function &__get ($prop) {
   if (isset($_SESSION[$prop])) {
     return $_SESSION[$prop];
   } else {
-    $null = NULL;
+    $null = null;
     return $null; // must return reference to variable
   }
 }

@@ -12,6 +12,9 @@ class ArrayClass implements \IteratorAggregate, \ArrayAccess, \Countable {
 private array $a;
 #@+others
 #@+node:caminhante.20231104205315.1: *3* static function unwrap
+/**
+ * Return raw arrays
+ */
 public static function unwrap (array $arrayOfArrays) {
   return a( $arrayOfArrays )
     ->map(function ($x) {
@@ -155,8 +158,8 @@ function slice (int $offset, ?int $length = null, bool $preserve_keys = false): 
  * @param ?array $replacement Array to insert instead of the spliced segment.
  * @return ArrayClass
  */
-function splice (int $offset, int $length = 0, ?array $replacement = NULL): ArrayClass {
-  if ($replacement == NULL) $replacement = array();
+function splice (int $offset, int $length = 0, ?array $replacement = null): ArrayClass {
+  if ($replacement == null) $replacement = array();
   return a(array_splice($this->a, $offset, $length, $replacement));
 }
 #@+node:caminhante.20220725205730.1: *3* function merge

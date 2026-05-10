@@ -182,7 +182,7 @@ function substr ($start = 0, $length = 0xFFFFFFF): StringClass {
  * @param int $count If set, the number of replacements performed
  * @return string|StringClass
  */
-function replace ($search, $replace, &$count = NULL): StringClass {
+function replace ($search, $replace, &$count = null): StringClass {
   return s(str_replace($search, $replace, $this->s, $count));
 }
 #@+node:caminhante.20221112201310.1: *4* function ireplace
@@ -193,7 +193,7 @@ function replace ($search, $replace, &$count = NULL): StringClass {
  * @param int $count If set, the number of replacements performed
  * @return string|StringClass
  */
-function ireplace ($search, $replace, &$count = NULL): StringClass {
+function ireplace ($search, $replace, &$count = null): StringClass {
   return s(str_ireplace($search, $replace, $this->s, $count));
 }
 #@+node:caminhante.20221112201315.1: *4* function preg_match
@@ -208,7 +208,7 @@ function ireplace ($search, $replace, &$count = NULL): StringClass {
  * @param int $offset Alternate start of the search (in characters)
  * @return int
  */
-function preg_match ($pattern, &$matches = NULL, $flags = 0, $offset = 0): int {
+function preg_match ($pattern, &$matches = null, $flags = 0, $offset = 0): int {
   if (!is_array($matches)) { $matches = array(); }
   // convert offset from characters to bytes
   if ($offset) { $offset = strlen($this->substr(0, $offset)); }
@@ -230,7 +230,7 @@ function preg_match ($pattern, &$matches = NULL, $flags = 0, $offset = 0): int {
  * @param int $offset Alternate start of the search (in characters)
  * @return int
  */
-function preg_match_all ($pattern, &$matches = NULL, $flags = PREG_PATTERN_ORDER, $offset = 0): int {
+function preg_match_all ($pattern, &$matches = null, $flags = PREG_PATTERN_ORDER, $offset = 0): int {
   if (!is_array($matches)) { $matches = array(); }
   // convert offset from characters to bytes
   if ($offset) { $offset = strlen($this->substr(0, $offset)); }
@@ -255,7 +255,7 @@ function preg_match_all ($pattern, &$matches = NULL, $flags = PREG_PATTERN_ORDER
  * @param int $count If specified it is filled with the number of replacements done
  * @return string|StringClass
  */
-function preg_replace ($pattern , $replacement , $limit = -1, &$count = NULL): StringClass {
+function preg_replace ($pattern , $replacement , $limit = -1, &$count = null): StringClass {
   return s(preg_replace($pattern, $replacement, $this->s, $limit, $count));
 }
 #@+node:caminhante.20221112201332.1: *4* function in_array
@@ -315,7 +315,7 @@ function match ($regexp): ArrayClass|null {
   if ($this->preg_match($regexp, $matches)) {
     return a($matches);
   };
-  return NULL;
+  return null;
 }
 #@+node:caminhante.20231104194423.1: *4* function repeat
 /**
@@ -341,8 +341,8 @@ function repeat (int $times): StringClass|null {
  * @param int $limit
  * @return array|ArrayClass
  */
-function split ($separator = NULL, $limit = 0xFFFFFF) {
-  if ($separator === NULL) return array($this->s);
+function split ($separator = null, $limit = 0xFFFFFF) {
+  if ($separator === null) return array($this->s);
   return $this->explode($separator, $limit);
 }
 #@+node:caminhante.20221112201718.1: *4* function substr
@@ -355,8 +355,8 @@ function split ($separator = NULL, $limit = 0xFFFFFF) {
  * @param int $end
  * @return string|StringClass
  */
-function substring ($start, $end = NULL) {
-  return $this->substr($start, ($end !== NULL) ? $end-$start : 0xFFFFFFF);
+function substring ($start, $end = null) {
+  return $this->substr($start, ($end !== null) ? $end-$start : 0xFFFFFFF);
 }
 #@+node:caminhante.20221112201727.1: *4* function toLowerCase
 /**
@@ -469,7 +469,7 @@ function parse_type (): \O\VariableType {
   $type = $this->s;
   $matches = array();
   $isArray = FALSE;
-  $keyType = NULL;
+  $keyType = null;
   // array[keytype]type
   if (s($type)->preg_match("/array(?:\\[([\S]*)\\]([\S]*))?/", $matches)) {
     $isArray = TRUE;
@@ -478,11 +478,11 @@ function parse_type (): \O\VariableType {
     // type[]
   } else if (s($type)->preg_match("/([^\\[]+)\\[\\]/", $matches)) {
     $isArray = TRUE;
-    $keyType = NULL;
+    $keyType = null;
     $type = $matches[1];
   } else if ($type == "array") {
     $isArray = TRUE;
-    $keyType = NULL;
+    $keyType = null;
     $type = "mixed";
   };
   $validTypes = array(
@@ -492,7 +492,7 @@ function parse_type (): \O\VariableType {
     "string", "resource", "object", "mixed");
   if (!s($keyType)->in_array($validTypes)) {
     if (empty($keyType) || !class_exists($keyType)) {
-      $keyType = NULL;
+      $keyType = null;
     };
   };
   if (!s($type)->in_array($validTypes)) {

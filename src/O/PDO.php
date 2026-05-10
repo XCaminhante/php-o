@@ -11,11 +11,11 @@ class PDO extends \PDO {
 /**
  * @var bool Enable a fluent API (methods that return bool become chainable)
  */
-private $fluent = TRUE;
+private $fluent = true;
 /**
  * @var PDOProfiler The current query profiler
  */
-private $profiler = NULL;
+private $profiler = null;
 /**
  * @var string The string format to convert DateTime values to when binding params
  */
@@ -75,7 +75,7 @@ public function getProfiler () {
  * @param int $fetchStyle
  * @return mixed
  */
-public function fetchAll ($query, $bind = array(), $fetchStyle = NULL) {
+public function fetchAll ($query, $bind = array(), $fetchStyle = null) {
   $args = array_slice(func_get_args(), 2);
   $args[0] = $fetchStyle ?: $this->getAttribute(PDO::ATTR_DEFAULT_FETCH_MODE);
   return $this->_internalFetch("fetchAll", $query, $bind, $args);
@@ -89,7 +89,7 @@ public function fetchAll ($query, $bind = array(), $fetchStyle = NULL) {
  * @param int $fetchStyle
  * @return mixed
  */
-public function fetchRow ($query, $bind = array(), $fetchStyle = NULL) {
+public function fetchRow ($query, $bind = array(), $fetchStyle = null) {
   $args = array_slice(func_get_args(), 2);
   $args[0] = $fetchStyle ?: $this->getAttribute(PDO::ATTR_DEFAULT_FETCH_MODE);
   return $this->_internalFetch("fetch", $query, $bind, $args);
@@ -113,7 +113,7 @@ public function fetchColumn ($query, $bind = array(), $columnNumber = 0) {
  * @param mixed $default Return this if the query has no results
  * @return mixed
  */
-public function fetchOne ($query, $bind = array(), $default = NULL) {
+public function fetchOne ($query, $bind = array(), $default = null) {
   $value = $this->_internalFetch("fetchColumn", $query, $bind, array(0));
   return ($value === FALSE) ? $default : $value;
 }
@@ -125,7 +125,7 @@ public function fetchOne ($query, $bind = array(), $default = NULL) {
  * @param string $returning param for lastInsertId
  * @return string|int result of lastInsertId($returning)
  */
-public function insert ($table, $bind = array(), $returning = NULL) {
+public function insert ($table, $bind = array(), $returning = null) {
   $bind = $this->_convertBind($bind, "insert");
   $values = array();
   for ($i = 0; $i < count($bind); $i++) $values[] = "?";
@@ -149,7 +149,7 @@ public function insert ($table, $bind = array(), $returning = NULL) {
  * @param mixed $whereBind assoc array or object of key/value pairs
  * @return int affected number of rows
  */
-public function update ($table, $values, $where = "", $whereBind = NULL) {
+public function update ($table, $values, $where = "", $whereBind = null) {
   $query =
     "update ".$table.PHP_EOL .
     "set" . PHP_EOL;
@@ -191,7 +191,7 @@ public function update ($table, $values, $where = "", $whereBind = NULL) {
  * @param mixed $whereBind assoc array or object of key/value pairs
  * @return int affected number of rows
  */
-public function delete ($table, $where = "", $whereBind = NULL) {
+public function delete ($table, $where = "", $whereBind = null) {
   $query = "delete from ".$table.PHP_EOL;
   $bind = array();
   if (!empty($where)) {
@@ -319,11 +319,11 @@ private function _isAssoc ($bind) {
  * @param $params
  * @return int|null
  */
-private function _beforeQuery ($query, $params = NULL) {
+private function _beforeQuery ($query, $params = null) {
   if ($this->profiler) {
     return $this->profiler->queryStart($query, $params);
   } else {
-    return NULL;
+    return null;
   }
 }
 #@+node:caminhante.20220725213112.1: *3* function _afterQuery
@@ -343,7 +343,7 @@ class PDOStatement extends \PDOStatement {
 #@+others
 #@+node:caminhante.20220725213235.1: *3* /vars
 /** @var PDO */
-private $pdo = NULL;
+private $pdo = null;
 /** @var array Parameters that are bound */
 private $params = array();
 #@+node:caminhante.20220725213337.1: *3* function __construct
@@ -397,7 +397,7 @@ public function bindParams ($bind): bool|PDOStatement {
  */
 #[\ReturnTypeWillChange]
 public function bindColumn (
-$column, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL
+$column, &$param, $type = null, $maxlen = null, $driverdata = null
 ): bool|PDOStatement {
   $result = parent::bindColumn($column, $param, $type, $maxlen, $driverdata);
   return $this->pdo->isFluent() ? $this : $result;
@@ -413,7 +413,7 @@ $column, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL
  */
 #[\ReturnTypeWillChange]
 public function bindParam (
-$parameter, &$variable, $data_type = PDO::PARAM_STR, $length = 0, $driver_options = NULL
+$parameter, &$variable, $data_type = PDO::PARAM_STR, $length = 0, $driver_options = null
 ): bool|PDOStatement {
   // ArrayClass, StringClass, ChainableClass
   if (is_object($variable) && method_exists($variable, "raw")) {
@@ -459,7 +459,7 @@ public function closeCursor (): bool|PDOStatement {
  * @return bool|PDOStatement
  */
 #[\ReturnTypeWillChange]
-public function execute ($input_parameters = NULL): bool|PDOStatement {
+public function execute ($input_parameters = null): bool|PDOStatement {
   if ($this->pdo->getProfiler()) {
     $id = $this->pdo->getProfiler()->queryStart(
       $this->queryString, $input_parameters ?: $this->params);
@@ -530,7 +530,7 @@ public function clear () {
  * @return int The id of the query profile
  */
 public function queryStart ($text, $bind) {
-  $this->profiles[] = array(NULL, microtime(true), $text, $bind);
+  $this->profiles[] = array(null, microtime(true), $text, $bind);
   return count($this->profiles) - 1;
 }
 #@+node:caminhante.20220725213752.1: *3* function queryEnd
@@ -539,7 +539,7 @@ public function queryStart ($text, $bind) {
  * @param int $profileID
  */
 public function queryEnd ($profileID) {
-  if ($profileID === NULL) return;
+  if ($profileID === null) return;
   if (isset($this->profiles[$profileID])) {
     $arr =& $this->profiles[$profileID];
     $arr[0] = microtime(true) - $arr[1];

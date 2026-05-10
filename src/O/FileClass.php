@@ -17,67 +17,66 @@ class FileClass {
   private $openmode = '';
   #@+others
   #@+node:caminhante.20240327153013.2: *3* function __construct ($filename)
-  function __construct ($filename) {
+  function __construct (&$filename) {
     $this->filename = s($filename);
     $this->pathinfo = pathinfo($filename);
   }
   #@+node:caminhante.20240327153013.3: *3* static function get_straight_path ($path)
-  static function get_straight_path ($path) {
+  // Returns a relative path that go straight to the target
+  static function get_straight_path (string $path): string {
     $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
     $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
     $absolutes = array();
     foreach ($parts as $part) {
-      if ('.' == $part) continue;
-      if ('..' == $part) {
-        array_pop($absolutes);
-      } else {
-        $absolutes[] = $part; }}
+      if ('.' == $part) { continue; }
+      if ('..' == $part) { array_pop($absolutes); }
+      else { $absolutes[] = $part; } }
     return implode(DIRECTORY_SEPARATOR, $absolutes);
   }
   #@+node:caminhante.20240327153013.4: *3* static function current_dir ()
   // Directory of the current script
-  static function current_dir () {
+  static function current_dir (): string {
     return dirname(__FILE__);
   }
   #@+node:caminhante.20240327153013.5: *3* Informations
   #@+node:caminhante.20240327153013.6: *4* static function separator ()
-  static function separator () {
+  static function separator (): string {
     return DIRECTORY_SEPARATOR;
   }
   #@+node:caminhante.20240327153013.7: *4* public function is_directory ()
-  public function is_directory () {
+  public function is_directory (): bool {
     return is_dir($this->filename);
   }
   #@+node:caminhante.20240327153013.8: *4* public function is_file ()
-  public function is_file () {
+  public function is_file (): bool {
     return is_file($this->filename);
   }
   #@+node:caminhante.20240327153013.9: *4* public function parent ()
   // The directory containing this file/directory
-  public function parent () {
+  public function parent (): string {
     return $this->pathinfo['dirname'];
   }
   #@+node:caminhante.20240327153013.10: *4* public function path ()
   // Canonical path to file/directory
-  public function path () {
+  public function path (): string {
     if ($this->exists()) { return realpath($this->filename); }
-    return realpath($this->parent()) . File::separator() . $this->name();
+    return realpath($this->parent()) . FileClass::separator() . $this->name();
   }
   #@+node:caminhante.20240327153013.11: *4* public function name ()
-  public function name () {
+  public function name (): string {
     return $this->pathinfo['basename'];
   }
   #@+node:caminhante.20240327153013.12: *4* public function relative_name ()
-  public function relative_name () {
+  public function relative_name (): StringClass {
     return $this->filename;
   }
   #@+node:caminhante.20240327153013.13: *4* public function extension ()
-  public function extension () {
+  public function extension (): string {
     return $this->pathinfo['extension'];
   }
   #@+node:caminhante.20240327153013.14: *4* public function length ()
   // Length of bytes on file or number of entries on a directory
-  public function length () {
+  public function length (): int {
     if ($this->is_directory()) {
       $dirlist = scandir($this->filename, SCANDIR_SORT_NONE);
       return a($dirlist)->count() - 2; }
@@ -86,23 +85,23 @@ class FileClass {
     return -1;
   }
   #@+node:caminhante.20240327153013.15: *4* public function exists ()
-  public function exists () {
+  public function exists (): bool {
     return file_exists($this->filename);
   }
   #@+node:caminhante.20240327153013.16: *4* public function is_open ()
-  public function is_open () {
+  public function is_open (): bool {
     return $filehandle != false;
   }
   #@+node:caminhante.20240327153013.17: *4* public function is_uploaded ()
-  public function is_uploaded () {
+  public function is_uploaded (): bool {
     return is_uploaded_file($this->filename);
   }
   #@+node:caminhante.20240327153013.18: *4* public function can_read ()
-  public function can_read () {
+  public function can_read (): bool {
     return is_readable($this->filename);
   }
   #@+node:caminhante.20240327153013.19: *4* public function can_write ()
-  public function can_write () {
+  public function can_write (): bool {
     return is_writable($this->filename);
   }
   #@+node:caminhante.20240327153013.20: *4* public function creation_time ()
@@ -243,7 +242,7 @@ class FileClass {
     $dir = $this->parent();
     if ($this->is_directory() && $this->exists()) {
       $dir = $this->name(); }
-    return glob($dir . File::separator() . $pattern, GLOB_MARK & GLOB_NOSORT & GLOB_BRACE);
+    return glob($dir . FileClass::separator() . $pattern, GLOB_MARK & GLOB_NOSORT & GLOB_BRACE);
   }
   #@+node:caminhante.20240327153013.41: *4* public function mkdir ($name = false)
   public function mkdir ($name = false) {
@@ -254,14 +253,14 @@ class FileClass {
     $dir = $this->parent();
     if ($this->is_directory() && $this->exists()) {
       $dir = $this->name(); }
-    return mkdir($dir . File::separator() . $name, 0777, true);
+    return mkdir($dir . FileClass::separator() . $name, 0777, true);
   }
   #@+node:caminhante.20240327153013.42: *4* public function mkfile ($name)
   public function mkfile ($name) {
     $dir = $this->parent();
     if ($this->is_directory() && $this->exists()) {
       $dir = $this->name(); }
-    return touch($dir . File::separator() . $name);
+    return touch($dir . FileClass::separator() . $name);
   }
   #@+node:caminhante.20240327153013.43: *3* Locks
   #@+node:caminhante.20240327153013.44: *4* public function lock_exclusive ()

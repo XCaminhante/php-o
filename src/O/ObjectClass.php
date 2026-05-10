@@ -89,7 +89,7 @@ function __call ($fn, $args) {
     return call_user_func_array(array($this->o, $fn), $args);
   } else if (isset($this->o->$fn)) {
     return call_user_func_array($this->o->$fn, $args);
-  } else { return NULL; }
+  } else { return null; }
 }
 #@+node:caminhante.20211024201724.1: *3* function __get
 function __get ($prop) {
@@ -129,7 +129,7 @@ function cast ($asType = "stdClass") {
         }
         return $result;
       } else {
-        return NULL;
+        return null;
       }
     } else {
       throw new \Exception("Unrecognized type: ".$asType);
@@ -160,7 +160,7 @@ function render ($template) {
  * @param array $errors Variable to return any found errors in, optional reference.
  * @return bool Whether the object is valid according to its annootations
  */
-function validate (&$errors = NULL) {
+function validate (&$errors = null) {
   if (!class_exists("\\O\\Validator")) { include("Validator.php"); }
   $errors = Validator::validate($this->raw());
   return empty($errors);
@@ -210,7 +210,7 @@ function convertType ($value, $type) {
     if (is_array($value)) {
       $newVal = array();
       foreach ($value as $key => $item) {
-        if ($type->key !== NULL) {
+        if ($type->key !== null) {
           $newVal[convertType($key, $type->key)] = convertType($item, $type->value);
         } else {
           $newVal[] = convertType($item, $type->value);
@@ -220,20 +220,20 @@ function convertType ($value, $type) {
     }
   } else {
     switch ($type->value) {
-      case "void": return NULL;
+      case "void": return null;
       case "bool": case "boolean": return filter_var($value, FILTER_VALIDATE_BOOLEAN);
       case "FALSE": case "false": return FALSE;
       case "int": case "integer": return intval(is_object($value) ? (string) $value : $value);
       case "float": case "double": return floatval(is_object($value) ? (string) $value : $value);
       case "string": return strval($value);
       case "mixed": return $value;
-      case "resource": return is_resource($value) ? $value : NULL;
+      case "resource": return is_resource($value) ? $value : null;
       case "object": return is_object($value) ? $value : o($value)->cast();
       case "DateTime": return ($value instanceof DateTime) ? $value : new DateTime($value);
       default: return o($value)->cast($type->value);
     }
   }
-  return NULL;
+  return null;
 }
 #@-others
 #@-leo
