@@ -157,7 +157,7 @@ function render ($template) {
 #@+node:caminhante.20211024201755.1: *3* function validate
 /**
  * Validate an object using Validator::validate
- * @param Array $errors Variable to return any found errors in, optional reference.
+ * @param array $errors Variable to return any found errors in, optional reference.
  * @return bool Whether the object is valid according to its annootations
  */
 function validate (&$errors = NULL) {

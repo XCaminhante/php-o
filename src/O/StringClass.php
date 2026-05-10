@@ -25,7 +25,7 @@ private $s;
 #@+node:caminhante.20221112200956.1: *3* function __construct
 function __construct ($s = "") {
   if (is_null($s)) {$s = "";}
-  $this->s = $s;
+  $this->s = \Normalizer::normalize($s);
 }
 #@+node:caminhante.20221112201012.1: *3* function __toString
 function __toString () {

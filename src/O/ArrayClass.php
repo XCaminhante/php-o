@@ -15,7 +15,7 @@ private array $a;
 public static function unwrap (array $arrayOfArrays) {
   return a( $arrayOfArrays )
     ->map(function ($x) {
-      if (is_a($x, "O\ArrayClass")) {$x = $x->raw();}
+      if (is_a($x, "O\ArrayClass")) { $x = $x->raw(); }
       if (is_array($x)) { $x = ArrayClass::unwrap($x); }
       return $x;
     })->raw();
@@ -26,7 +26,7 @@ function __construct (&$a = array()) {
   else { $this->a =& $a; }
 }
 #@+node:caminhante.20240327150132.1: *3* function __toString
-function __toString () {
+function __toString (): string {
   return ObjectClass::json_print($this->a);
 }
 #@+node:caminhante.20220725205557.1: *3* function count
@@ -35,7 +35,7 @@ function __toString () {
  * @param int $mode If set to COUNT_RECURSIVE, will recursively count the array.
  * @return int
  */
-function count ($mode = COUNT_NORMAL): int {
+function count (int $mode = COUNT_NORMAL): int {
   return count($this->a, $mode);
 }
 #@+node:caminhante.20220725205611.1: *3* function has
@@ -45,7 +45,7 @@ function count ($mode = COUNT_NORMAL): int {
  * @param bool $strict If true will also compare the types
  * @return bool
  */
-function has ($needle, $strict = FALSE) {
+function has (mixed $needle, bool $strict = FALSE): bool {
   return in_array($needle, $this->a, $strict);
 }
 #@+node:caminhante.20220725205617.1: *3* function search
@@ -55,7 +55,7 @@ function has ($needle, $strict = FALSE) {
  * @param bool $strict If true will also compare the types
  * @return mixed
  */
-function search ($needle, $strict = FALSE) {
+function search (mixed $needle, bool $strict = FALSE): mixed {
   return array_search($needle, $this->a, $strict);
 }
 #@+node:caminhante.20220725205625.1: *3* function shift
@@ -63,7 +63,7 @@ function search ($needle, $strict = FALSE) {
  * Shift an element off the beginning of array
  * @return mixed
  */
-function shift () {
+function shift (): mixed {
   return array_shift($this->a);
 }
 #@+node:caminhante.20220725205629.1: *3* function unshift
@@ -72,11 +72,11 @@ function shift () {
  * @param mixed $value1 First value to prepend
  * @return int
  */
-function unshift ($value1) {
+function unshift (mixed $value1): int {
   $args = func_get_args();
   for ($i = count($args) - 1; $i >= 0; $i--) {
     array_unshift($this->a, $args[$i]);
-  };
+  }
   return count($this->a);
 }
 #@+node:caminhante.20220725205637.1: *3* function key_exists
@@ -85,33 +85,33 @@ function unshift ($value1) {
  * @param mixed $key Value to check
  * @return bool
  */
-function key_exists ($key) {
+function key_exists (mixed $key): bool {
   return array_key_exists($key, $this->a);
 }
 #@+node:caminhante.20220725205647.1: *3* function implode
 /**
  * Join array elements with a string
  * @param string $glue Defaults to an empty string
- * @return string|StringClass
+ * @return StringClass
  */
-function implode ($glue = "") {
+function implode (string $glue = ""): StringClass {
   return s(implode($glue, $this->a));
 }
 #@+node:caminhante.20220725205701.1: *3* function keys
 /**
  * Return all the keys of an array.
  * Due to limitations the additional parameters of array_keys are not supported.
- * @return Array|ArrayClass
+ * @return ArrayClass
  */
-function keys () {
+function keys (): ArrayClass {
   return a(array_keys($this->a));
 }
 #@+node:caminhante.20220725205706.1: *3* function values
 /**
  * Return all the values of an array
- * @return Array|ArrayClass
+ * @return ArrayClass
  */
-function values () {
+function values (): ArrayClass {
   return a(array_values($this->a));
 }
 #@+node:caminhante.20220725205711.1: *3* function pop
@@ -119,7 +119,7 @@ function values () {
  * Pop the element off the end of array
  * @return mixed
  */
-function pop () {
+function pop (): mixed {
   return array_pop($this->a);
 }
 #@+node:caminhante.20220725205716.1: *3* function push
@@ -128,22 +128,22 @@ function pop () {
  * @param mixed $value1 The first value to append
  * @return int
  */
-function push ($value1) {
+function push (mixed $value1): int {
   $args = func_get_args();
   for ($i = 0; $i < count($args); $i++) {
     array_push($this->a, $args[$i]);
-  };
+  }
   return count($this->a);
 }
 #@+node:caminhante.20220725205720.1: *3* function slice
 /**
  * Extract a slice of the array
  * @param int $offset Start from this offset in the array. If negative, offset from end.
- * @param int $length Number of elements to slice. If negative, stop slicing $length from the end.
+ * @param ?int $length Number of elements to slice. If negative, stop slicing $length from the end.
  * @param bool $preserve_keys Preserve the array's keys
- * @return Array|ArrayClass
+ * @return ArrayClass
  */
-function slice ($offset, $length = NULL, $preserve_keys = false) {
+function slice (int $offset, ?int $length = null, bool $preserve_keys = false): ArrayClass {
   $r = array_slice($this->a, $offset, $length, $preserve_keys);
   return a($r);
 }
@@ -152,20 +152,20 @@ function slice ($offset, $length = NULL, $preserve_keys = false) {
  * Remove a portion of the array and replace it with something else
  * @param int $offset Start from this offset in the array. If negative, offset from end.
  * @param int $length Number of elements to slice. If negative, stop splicing $length from the end.
- * @param Array $replacement Array to insert instead of the spliced segment.
- * @return Array|ArrayClass
+ * @param ?array $replacement Array to insert instead of the spliced segment.
+ * @return ArrayClass
  */
-function splice ($offset, $length = 0, $replacement = NULL) {
+function splice (int $offset, int $length = 0, ?array $replacement = NULL): ArrayClass {
   if ($replacement == NULL) $replacement = array();
   return a(array_splice($this->a, $offset, $length, $replacement));
 }
 #@+node:caminhante.20220725205730.1: *3* function merge
 /**
  * Merge one or more arrays
- * @param Array $array1 The first array to merge
+ * @param array|ArrayClass $array1 The first array to merge
  * @return ArrayClass
  */
-function merge ($array1) {
+function merge (array|ArrayClass $array1): ArrayClass {
   $args = call_user_func_array("array_merge", ArrayClass::unwrap(func_get_args()) );
   $r = array_merge($this->a, $args);
   return a($r);
@@ -173,21 +173,21 @@ function merge ($array1) {
 #@+node:caminhante.20231104203124.1: *3* function concat
 /**
  * Append array elements from the second array to this while not overwriting the elements
- * @param array $array1
+ * @param array|ArrayClass $array1
  * @return ArrayClass
  */
-function concat (array $array1): ArrayClass {
-  return a(array($array1) + array($this->a));
+function concat (array|ArrayClass $array1): ArrayClass {
+  return a(a($array1)->raw() + $this->a);
 }
 #@+node:caminhante.20220725205735.1: *3* function map
 /**
  * Applies the callback to the elements of this array and additional ones
- * @param Callable $callback Callback function to run for each element in each array.
+ * @param callable $callback Callback function to run for each element in each array.
  * The number of parameters that the callback function accepts should match the number of arrays passed
- * @param Array $array2 The second array whose items to pass as the second argument of $callback.
- * @return Array|ArrayClass
+ * @param ?array $array2 The second array whose items to pass as the second argument of $callback.
+ * @return ArrayClass
  */
-function map ($callback, $array2 = NULL) {
+function map (callable $callback, ?array $array2 = null): ArrayClass {
   $args = func_get_args();
   $params = a($args)->slice(1);
   a($params)->unshift($callback, $this->a);
@@ -197,31 +197,31 @@ function map ($callback, $array2 = NULL) {
 #@+node:caminhante.20220725210154.1: *3* function reduce
 /**
  * Iteratively reduce the array to a single value using a callback function
- * @param Callable $callback The callback function to call
+ * @param callable $callback The callback function to call
  *    <code>mixed function($carry, $item)</code>
  *    $carry is the previous iteration's return value, for the first iteration it holds $initial<br>
  *    $item holds the value of the current iteration
  * @param mixed $initial The initial value for the first iteration
  * @return mixed
  */
-function reduce ($callback, $initial = NULL) {
+function reduce (callable $callback, mixed $initial = null): mixed {
   return array_reduce($this->a, $callback, $initial);
 }
 #@+node:caminhante.20220725210158.1: *3* function filter
 /**
  * Filters elements of an array using a callback function
- * @param Callable $callback If this returns true for a value, the value is in the result array.
- * @return Array|ArrayClass
+ * @param callable $callback If this returns true for a value, the value is in the result array.
+ * @return ArrayClass
  */
-function filter ($callback = NULL) {
+function filter (callable $callback): ArrayClass {
   return a(array_filter($this->a, $callback));
 }
 #@+node:caminhante.20220725210202.1: *3* function sum
 /**
  * Calculate the sum of values in an array
- * @return number
+ * @return int|float
  */
-function sum () {
+function sum (): int|float {
   return array_sum($this->a);
 }
 #@+node:caminhante.20220725210217.1: *3* function begin
@@ -229,7 +229,7 @@ function sum () {
  * Set the internal pointer of an array to its first element
  * @return mixed The first array value
  */
-function begin () {
+function begin (): mixed {
   return reset($this->a);
 }
 #@+node:caminhante.20220725210224.1: *3* function current
@@ -237,7 +237,7 @@ function begin () {
  * Return the current element in an array
  * @return mixed
  */
-function current () {
+function current (): mixed {
   return current($this->a);
 }
 #@+node:caminhante.20220725210230.1: *3* function next
@@ -245,7 +245,7 @@ function current () {
  * Advance the internal array pointer of an array
  * @return mixed The next array value
  */
-function next () {
+function next (): mixed {
   return next($this->a);
 }
 #@+node:caminhante.20220725210401.1: *3* function end
@@ -253,31 +253,30 @@ function next () {
  * Set the internal pointer of an array to its last element
  * @return mixed The last array value
  */
-function end () {
+function end (): mixed {
   return end($this->a);
 }
 #@+node:caminhante.20220725210404.1: *3* function each
 /**
  * Return the current key and value pair from an array and advance the array cursor
- * @return Array|ArrayClass
+ * @return ArrayClass
  */
-function each () {
+function each (): ArrayClass {
   return a(each($this->a));
 }
 #@+node:caminhante.20220725210602.1: *3* function clear
 /**
  * Remove all elements from the array
- * @return Array|ArrayClass
  */
-function clear () {
-  return $this->a = array();
+function clear (): void {
+  $this->a = array();
 }
 #@+node:caminhante.20220725210606.1: *3* function raw
 /**
  * Return the internal raw Array for this ArrayClass object
- * @return Array
+ * @return array
  */
-function raw () {
+function raw (): array {
   return $this->a;
 }
 #@+node:caminhante.20220725210609.1: *3* implements \IteratorAggregate
