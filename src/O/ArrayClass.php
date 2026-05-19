@@ -217,7 +217,8 @@ function reduce (callable $callback, mixed $initial = null): mixed {
  * @return ArrayClass
  */
 function filter (callable $callback): ArrayClass {
-  return a(array_filter($this->a, $callback));
+  $f = array_filter($this->a, $callback);
+  return a($f);
 }
 #@+node:caminhante.20220725210202.1: *3* function sum
 /**

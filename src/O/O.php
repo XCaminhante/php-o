@@ -27,7 +27,7 @@ static function init () {
   if (!class_exists("\\O\\Validator")) { include($classPath."/Validator.php"); }
   // PDO
   if (!class_exists("\\O\\PDO") && extension_loaded("pdo")) { include($classPath."/PDO.php"); }
-  // DateTime
+  // d()
   if (!class_exists("\\O\\DateTime")) { include($classPath."/DateTime.php"); }
 }}
 #@-others
