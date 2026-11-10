@@ -230,8 +230,9 @@ The supported annotations are these:
 - **@Null**: can be used to override an @NotNull in a subclass.
 - **@NotNull**: property does not accept null as a value. If you do not specify this, null is a valid value (even if it fails other validation rules).
 - **@NotEmpty**: Same as @NotNull, and also string cannot be "", or whitespace and array must have at least one item.
-- **@AssertTrue**
-- **@AssertFalse**
+- **@AssertTrue**: property must be a boolean (or castable to boolean) and true.
+- **@AssertFalse**: property must be a boolean (or castable to boolean) and false.
+- **@Assert("function"), @Assert(function="function")**: the property value is passed to a function; it needs to return true if valid, false otherwise.
 - **@Min(value)**: property must be >= the value
 - **@Max(value)**: property must be <= the value
 - **@Size(min=value,max=value)**: array or string length must fit these constraints (supports specifying just min or max)
