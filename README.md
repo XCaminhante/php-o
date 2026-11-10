@@ -239,7 +239,7 @@ The supported annotations are these:
 - **@DecimalMin(value)**: same as @Min, but can deal with large numbers
 - **@DecimalMax(value)**: same as @Max, but can deal with large numbers
 - **@Digits(integer=value,fraction=value)**: the specified number must have at most this many integer or fractional digits
-- **@Pattern(regex=value)**: string must match the regex
+- **@Pattern(regex=value),@Pattern(regex=value,flags="gi")**: string must match the regex
 - **@Past**: date must be in the past (supports DateTime instances, date strings and integer timestamps)
 - **@Future**: date must be in the future
 - **@Valid**: recursively validate this property (for object properties with a type annotation)
